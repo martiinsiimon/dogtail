@@ -35,12 +35,12 @@ def GNOME():
 		assert focus.application.children
 		
 		focus.application('metacity')
-		print focus.application.node
+		print (focus.application.node)
 		assert focus.application.node
 		running = True
-		print "GNOME Session detected."
+		print ("GNOME Session detected.")
 	except AttributeError or AssertionError or FocusError:
-		print "ERROR: No session found."
+		print ("ERROR: No session found.")
 	return running
 
 def KDE():

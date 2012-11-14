@@ -5,8 +5,8 @@ __author__ = "Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>
 
 import os
 import re
-from version import Version
-from logging import debugLogger as logger
+from dogtail.version import Version
+from dogtail.logging import debugLogger as logger
 
 class DistributionNotSupportedError(Exception):
     """
@@ -90,14 +90,14 @@ class _RpmPackageDb(PackageDb):
         ts = rpm.TransactionSet()
         for header in ts.dbMatch("name", packageName):
             return Version.fromString(header["version"])
-        raise PackageNotFoundError, packageName
+        raise PackageNotFoundError(packageName)
 
     def getFiles(self, packageName):
         import rpm
         ts = rpm.TransactionSet()
         for header in ts.dbMatch("name", packageName):
             return header["filenames"]
-        raise PackageNotFoundError, packageName
+        raise PackageNotFoundError(packageName)
 
     def getDependencies(self, packageName):
         import rpm
@@ -120,7 +120,7 @@ class _RpmPackageDb(PackageDb):
                         # Add to the Hash with a dummy value
                         result[depName]=None
             return result.keys()
-        raise PackageNotFoundError, packageName
+        raise PackageNotFoundError(packageName)
 
 class _AptPackageDb(PackageDb):
     def __init__(self):
@@ -138,13 +138,13 @@ class _AptPackageDb(PackageDb):
                 import re
                 verString = re.match('.*Ver:\'(.*)-.*\' Section:', str(package.CurrentVer)).group(1)
                 return Version.fromString(verString)
-        raise PackageNotFoundError, packageName
+        raise PackageNotFoundError(packageName)
 
     def getFiles(self, packageName):
         files = []
         list = os.popen('dpkg -L %s' % packageName).readlines()
         if not list:
-            raise PackageNotFoundError, packageName
+            raise PackageNotFoundError(packageName)
         else:
             for line in list:
                 file = line.strip()
@@ -164,7 +164,7 @@ class _AptPackageDb(PackageDb):
             if package.Name == packageName:
                 current = package.CurrentVer
                 if not current:
-                    raise PackageNotFoundError, packageName
+                    raise PackageNotFoundError(packageName)
                 depends = current.DependsList
                 list = depends['Depends']
                 for dependency in list:
@@ -208,7 +208,7 @@ class _ConaryPackageDb(PackageDb):
         client = ConaryClient()
         dbVersions = client.db.getTroveVersionList(packageName)
         if not len(dbVersions):
-            raise PackageNotFoundError, packageName
+            raise PackageNotFoundError(packageName)
         return dbVersions[0].trailingRevision().asString().split("-")[0]
 
 # getVersion not implemented because on Solaris multiple modules are installed

@@ -11,9 +11,9 @@ import re
 import time
 import datetime
 import os.path
-from config import config
-from logging import ResultsLogger, TimeStamp, debugLogger
-from PIL import Image, ImageChops, ImageStat
+from dogtail.config import config
+from dogtail.logging import ResultsLogger, TimeStamp, debugLogger
+#from PIL import Image, ImageChops, ImageStat
 
 
 class TC(object):
@@ -179,7 +179,7 @@ class TCBool(TC):
         else: result = {label: "Failed"}
         TC.logger.log(result)
 
-from tree import Node
+from dogtail.tree import Node
 class TCNode(TC):
     def __init__(self): pass
 
@@ -335,13 +335,13 @@ if __name__ == '__main__':
     presently = stamp1.fileStamp("filestamp")
 
     # Print - should be filenameYYYYMMDD with local systems date
-    print presently
+    print (presently)
 
     # Make a stamp entry
     entry = stamp1.entryStamp()
 
     # Print the entrystamp - should be YYYY-MM-DD_HH:MM:SS with local system time
-    print entry
+    print (entry)
 
     # Copmare different colors
     label = "unit test case 3.0"
@@ -356,7 +356,7 @@ if __name__ == '__main__':
     result = case3.compare(label, baseline, undertest)
 
     # Print the result Should be label - Failed
-    print result
+    print (result)
 
     # Compare different sizes
     label = "unit test case 3.1"
@@ -368,7 +368,7 @@ if __name__ == '__main__':
     result = case3.compare(label, baseline, undertest)
 
     # Print the result Should be label - Failed
-    print result
+    print (result)
 
     # Compare the same image
     label = "unit test case 3.2"
@@ -380,7 +380,7 @@ if __name__ == '__main__':
     result = case3.compare(label, baseline, undertest)
 
     # Print the result Should be label - Passed
-    print result
+    print (result)
 
     # Number comparison tests
     label = "unit test case 4.0"
@@ -396,7 +396,7 @@ if __name__ == '__main__':
     result = case4.compare(label, baseline, undertest, type)
 
     # Should be Passed
-    print result
+    print (result)
 
     # Now make the int fail
     label = "unit test case 4.1"
@@ -406,19 +406,19 @@ if __name__ == '__main__':
     result = case4.compare(label, baseline, undertest, type)
 
     # Should fail
-    print result
+    print (result)
 
     # Now long pass
     label = "unit test case 4.2"
-    baseline = 1112223334445556667778889990L
-    undertest = 1112223334445556667778889990L
+    baseline = 1112223334445556667778889990
+    undertest = 1112223334445556667778889990
     type = "long"
     result = {}
 
     result = case4.compare(label, baseline, undertest, type)
 
     # Should pass
-    print result
+    print (result)
 
     # Float Pass
     label = "unit test case 4.3"
@@ -430,7 +430,7 @@ if __name__ == '__main__':
     result = case4.compare(label, baseline, undertest, type)
 
     # Should pass
-    print result
+    print (result)
 
     # Complex pass
     label = "unit test case 4.4"
@@ -442,19 +442,19 @@ if __name__ == '__main__':
     result = case4.compare(label, baseline, undertest, type)
 
     # Should pass
-    print result
+    print (result)
 
     # Octal pass
     label = "unit test case 4.5"
-    baseline = 0400
-    undertest = 0400
+    baseline = 0o400
+    undertest = 0o400
     type = "oct"
     result = {}
 
     result = case4.compare(label, baseline, undertest, type)
 
     # Should pass
-    print result
+    print (result)
 
     # Hex pass
     label = "unit test case 4.6"
@@ -466,19 +466,19 @@ if __name__ == '__main__':
     result = case4.compare(label, baseline, undertest, type)
 
     # Should pass
-    print result
+    print (result)
 
     # Conversion pass - pass in equivalent hex and octal but compare as int
     label = "unit test case 4.7"
     baseline = 0x100
-    undertest = 0400
+    undertest = 0o400
     type = "int"
     result = {}
 
     result = case4.compare(label, baseline, undertest, type)
 
     # Should pass
-    print result
+    print (result)
 
     # Give a bogus type
     label = "unit test case 4.8"
@@ -488,4 +488,4 @@ if __name__ == '__main__':
     result = case4.compare(label, baseline, undertest, type)
 
     # Should fail - unsupported type
-    print result
+    print (result)

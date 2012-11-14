@@ -23,9 +23,9 @@ def testBinary(path):
             path.startswith(os.path.join('.','')) or 
             path.startswith(os.path.join('..',''))):
         if not os.path.exists(path):
-            raise IOError, (errno.ENOENT, "No such file", path)
+            raise IOError(errno.ENOENT, "No such file", path)
         if not os.access(path, os.X_OK):
-            raise IOError, (errno.ENOEXEC, "Permission denied", path)
+            raise IOError(errno.ENOEXEC, "Permission denied", path)
     return True
 
 def get_username():
@@ -100,7 +100,7 @@ class XServer(Subprocess):
         return cmd
 
     def start(self):
-        print ' '.join(self.cmdList)
+        print (' '.join(self.cmdList))
         self.popen = subprocess.Popen(self.cmdList)
         return self.popen.pid
 

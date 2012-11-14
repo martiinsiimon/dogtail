@@ -17,11 +17,11 @@ import re
 import cairo
 from gi.repository import Gtk
 from gi.repository import GObject
-from config import config
+from dogtail.config import config
 from time import sleep
-from logging import debugLogger as logger
-from logging import TimeStamp
-from errors import DependencyNotFoundError
+from dogtail.logging import debugLogger as logger
+from dogtail.logging import TimeStamp
+from dogtail.errors import DependencyNotFoundError
 
 def screenshot(file = 'screenshot.png', timeStamp = True):
     """
@@ -34,7 +34,7 @@ def screenshot(file = 'screenshot.png', timeStamp = True):
     The timeStamp argument may be set to False to name the file foo.png.
     """
     if not isinstance(timeStamp, bool):
-        raise TypeError, "timeStampt must be True or False"
+        raise TypeError("timeStampt must be True or False")
     # config is supposed to create this for us. If it's not there, bail.
     assert os.path.isdir(config.scratchDir)
 
@@ -70,7 +70,7 @@ def screenshot(file = 'screenshot.png', timeStamp = True):
     try:
         pixbuf.savev(path, fileExt, [], [])
     except GObject.GError:
-        raise ValueError, "Failed to save screenshot in %s format" % fileExt
+        raise ValueError("Failed to save screenshot in %s format" % fileExt)
     assert os.path.exists(path)
     logger.log("Screenshot taken: " + path)
     return path
@@ -81,7 +81,7 @@ def run(string, timeout=config.runTimeout, interval=config.runInterval, desktop=
     If dumb is omitted or is False, polls at interval seconds until the application is finished starting, or until timeout is reached.
     If dumb is True, returns when timeout is reached.
     """
-    if not desktop: from tree import root as desktop
+    if not desktop: from dogtail.tree import root as desktop
     args = string.split()
     name = args[0]
     os.environ['GTK_MODULES'] = 'gail:atk-bridge'
@@ -104,7 +104,7 @@ def run(string, timeout=config.runTimeout, interval=config.runInterval, desktop=
                     if child.name == appName:
                         for grandchild in child.children:
                             if grandchild.roleName == 'frame':
-                                from procedural import focus
+                                from dogtail.procedural import focus
                                 focus.application.node = child
                                 doDelay(interval)
                                 return pid
@@ -194,7 +194,7 @@ class Lock(object):
             try:
                 os.mkdir(self.lockdir)
                 return self.lockdir
-            except OSError, e:
+            except OSError as e:
                 if e.errno == errno.EEXIST and os.path.isdir(self.lockdir):
                     raise OSError(locked_msg)
         else:
@@ -209,7 +209,7 @@ class Lock(object):
         if os.path.exists(self.lockdir):
             try:
                 os.rmdir(self.lockdir)
-            except OSError, e:
+            except OSError as e:
                 if e.erron == errno.EEXIST:
                     raise OSError('Dogtail unlock: lockdir removed elsewhere!')
         else:

@@ -85,12 +85,12 @@ class SearchPath:
             result.__list = other.__list[i+1:]
 
             if False:
-                print "...................."
-                print "from %s"%self
-                print "to %s"%other
-                print "i=%s"%i
-                print "relative path %s"%result
-                print "...................."
+                print("....................")
+                print("from %s"%self)
+                print("to %s"%other)
+                print("i=%s"%i)
+                print("relative path %s"%result)
+                print("....................")
 
             return result
         else:

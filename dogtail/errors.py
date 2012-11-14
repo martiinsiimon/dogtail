@@ -3,7 +3,7 @@
 General exceptions; not overly module-specific
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>"
-from logging import debugLogger as logger
+from dogtail.logging import debugLogger as logger
 
 import inspect
 def warn(message, caller = True):

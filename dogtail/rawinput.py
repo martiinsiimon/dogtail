@@ -19,9 +19,9 @@ gi.require_version('Gdk', '3.0')
 import sys
 from gi.repository import Gtk
 from gi.repository import Gdk
-from config import config
-from utils import doDelay
-from logging import debugLogger as logger
+from dogtail.config import config
+from dogtail.utils import doDelay
+from dogtail.logging import debugLogger as logger
 from pyatspi import Registry as registry
 from pyatspi import (KEY_SYM, KEY_PRESS, KEY_PRESSRELEASE, KEY_RELEASE)
 
@@ -144,7 +144,7 @@ def keyNameToKeySym(keyName):
         if not keySym: keySym = getattr(Gdk, keyName)
     except AttributeError:
         try: keySym = uniCharToKeySym(keyName)
-        except TypeError: raise KeyError, keyName
+        except TypeError: raise KeyError(keyName)
     return keySym
 
 def keyNameToKeyCode(keyName):
@@ -192,7 +192,7 @@ def keyCombo(comboString):
     for s in strings:
         if not hasattr(Gdk, s):
             if not hasattr(Gdk, 'KEY_' + s):
-                raise ValueError, "Cannot find key %s" % s
+                raise ValueError("Cannot find key %s" % s)
     modifiers = strings[:-1]
     finalKey = strings[-1]
     for modifier in modifiers:

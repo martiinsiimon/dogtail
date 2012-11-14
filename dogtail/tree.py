@@ -60,29 +60,29 @@ __author__ = """Zack Cerza <zcerza@redhat.com>,
 David Malcolm <dmalcolm@redhat.com>
 """
 
-from config import config
+from dogtail.config import config
 if config.checkForA11y:
-    from utils import checkForA11y
+    from dogtail.utils import checkForA11y
     checkForA11y()
 
 import sys
 import re
-import predicate
+from dogtail import predicate
 from datetime import datetime
 from time import sleep
-from utils import doDelay
-from utils import Blinker
-from utils import Lock
-import rawinput
-import path
+from dogtail.utils import doDelay
+from dogtail.utils import Blinker
+from dogtail.utils import Lock
+from dogtail import rawinput
+from dogtail import path
 
-from logging import debugLogger as logger
+from dogtail.logging import debugLogger as logger
 
 try:
     import pyatspi
     import Accessibility
 except ImportError:
-    raise ImportError, "Error importing the AT-SPI bindings"
+    raise ImportError("Error importing the AT-SPI bindings")
 
 # We optionally import the bindings for libWnck.
 try:
@@ -162,7 +162,7 @@ class Action:
         logger.log("%s on %s"%(self.name, self.node.getLogString()))
         if not self.node.sensitive:
             if config.ensureSensitivity:
-                raise NotSensitiveError, self
+                raise NotSensitiveError(self)
             else:
                 nSE = NotSensitiveError(self)
                 logger.log("Warning: " + str(nSE))
@@ -184,18 +184,16 @@ class Node:
         try: len(self.user_data)
         except (AttributeError, TypeError): self.user_data = {}
 
-    @apply
-    def debugName():
-        doc = "debug name assigned during search operations"
-        def fget(self):
-            self.__setupUserData()
-            return self.user_data.get('debugName', None)
+    @property
+    def debugName(self):
+        """debug name assigned during search operations"""
+        self.__setupUserData()
+        return self.user_data.get('debugName', None)
 
-        def fset(self, debugName):
-            self.__setupUserData()
-            self.user_data['debugName'] = debugName
-
-        return property(**locals())
+    @debugName.setter
+    def debugName(self, debugName):
+        self.__setupUserData()
+        self.user_data['debugName'] = debugName
 
     ##
     # Accessible
@@ -215,7 +213,7 @@ class Node:
     def children(self):
         """a list of this Accessible's children"""
         if self.parent and self.parent.roleName == 'hyper link':
-            print self.parent.role
+            print (self.parent.role)
             return []
         children = []
         childCount = self.childCount
@@ -296,19 +294,17 @@ class Node:
         finally:
             return actions
 
-    @apply
-    def combovalue():
-        doc = "The value (as a string) currently selected in the combo box."
+    @property
+    def combovalue(self):
+        """The value (as a string) currently selected in the combo box."""
+        return self.name
 
-        def fget(self): return self.name
-
-        def fset(self, value):
-            logger.log("Setting combobox %s to '%s'"%(self.getLogString(),
-                value))
-            self.childNamed(childName=value).doActionNamed('click')
-            doDelay()
-
-        return property(**locals())
+    @combovalue.setter
+    def combovalue(self, value):
+        logger.log("Setting combobox %s to '%s'"%(self.getLogString(),
+            value))
+        self.childNamed(childName=value).doActionNamed('click')
+        doDelay()
 
     ##
     # Hypertext and Hyperlink
@@ -324,9 +320,9 @@ class Node:
     # Text and EditableText
     ##
 
-    @apply
-    def text():
-        doc = """For instances with an AccessibleText interface, the text as a
+    @property
+    def text(self):
+        """For instances with an AccessibleText interface, the text as a
     string. This is read-only, unless the instance also has an
     AccessibleEditableText interface. In this case, you can write values
     to the attribute. This will get logged in the debug log, and a delay
@@ -334,37 +330,33 @@ class Node:
 
     If this instance corresponds to a password entry, use the passwordText
     property instead."""
+        try: return self.queryText().getText(0,-1)
+        except NotImplementedError: return None
 
-        def fget(self):
-            try: return self.queryText().getText(0,-1)
-            except NotImplementedError: return None
-        def fset(self, text):
-             try:
-                 if config.debugSearching:
-                     msg = "Setting text of %s to %s"
-                     # Let's not get too crazy if 'text' is really large...
-                     # FIXME: Sometimes the next line screws up Unicode strings.
-                     if len(text) > 140: txt = text[:134] + " [...]"
-                     else: txt = text
-                     logger.log(msg % (self.getLogString(), "'%s'" % txt))
-                 self.queryEditableText().setTextContents(text)
-             except NotImplementedError:
-                 raise AttributeError, "can't set attribute"
+    @text.setter
+    def text(self, text):
+        try:
+            if config.debugSearching:
+                msg = "Setting text of %s to %s"
+                # Let's not get too crazy if 'text' is really large...
+                # FIXME: Sometimes the next line screws up Unicode strings.
+                if len(text) > 140: txt = text[:134] + " [...]"
+                else: txt = text
+                logger.log(msg % (self.getLogString(), "'%s'" % txt))
+                self.queryEditableText().setTextContents(text)
+        except NotImplementedError:
+            raise AttributeError("can't set attribute")
 
-        return property(**locals())
 
-    @apply
-    def caretOffset():
-
-        def fget(self):
-            """For instances with an AccessibleText interface, the caret
+    @property
+    def caretOffset(self):
+        """For instances with an AccessibleText interface, the caret
             offset as an integer."""
-            return self.queryText().caretOffset
+        return self.queryText().caretOffset
 
-        def fset(self, offset):
-            return self.queryText().setCaretOffset(offset)
-
-        return property(**locals())
+    @caretOffset.setter
+    def caretOffset(self, offset):
+        return self.queryText().setCaretOffset(offset)
 
     ##
     # Component
@@ -571,17 +563,15 @@ class Node:
     # Value
     ##
 
-    @apply
-    def value():
-        doc = "The value contained by the AccessibleValue interface."
-        def fget(self):
-            try: return self.queryValue().currentValue
-            except NotImplementedError: pass
+    @property
+    def value(self):
+        """The value contained by the AccessibleValue interface."""
+        try: return self.queryValue().currentValue
+        except NotImplementedError: pass
 
-        def fset(self, value):
-            self.queryValue().currentValue = value
-
-        return property(**locals())
+    @value.setter
+    def value(self, value):
+        self.queryValue().currentValue = value
 
     @property
     def minValue(self):
@@ -754,7 +744,7 @@ class Node:
         if not recursive:
             cIter = iter(self)
             while True:
-                try: child = cIter.next()
+                try: child = next(cIter)
                 except StopIteration: break
                 if child is not None:
                     if pred(child): return child

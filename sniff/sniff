@@ -521,9 +521,9 @@ class SniffModel(Gtk.TreeStore):
                 node = self.getNode(iter)
                 self.set_value(iter, self.nameColumn, node.name)
             elif event.type.minor == "accessible-state":
-                print str(event)
+                print (str(event))
         elif event.type.major == "state-changed":
-            print str(event)
+            print (str(event))
         elif event.type.major == "children-changed":
             if event.type.minor == 'add':
                 for child in node.children:

@@ -5,7 +5,7 @@ Subclass these classes if you want to create application wrappers, e.g.:
 http://svn.gnome.org/viewvc/dogtail-tests/trunk/appwrappers/dogtail/appwrappers/gedit.py?view=markup
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>"
-import tree
+import dogtail.tree
 import Accessibility
 
 def makeWrapperClass(wrappedClass, name):

@@ -29,7 +29,7 @@ textbuffer = gedit.findChildren(GenericPredicate(roleName='text'))[-1]
 
 # Load the UTF-8 demo file.
 from sys import path
-utfdemo = file(path[0] + '/data/UTF-8-demo.txt')
+utfdemo = open(path[0] + '/data/UTF-8-demo.txt', 'r')
 
 # Load the UTF-8 demo file into gedit's text buffer.
 textbuffer.text = utfdemo.read()

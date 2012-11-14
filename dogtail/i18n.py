@@ -7,16 +7,16 @@ Authors: David Malcolm <dmalcolm@redhat.com>
 
 __author__ = """David Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"""
 
-import config
+from dogtail.config import config
 
 import os
 import re
 import gettext
 
-from logging import debugLogger as logger
+from dogtail.logging import debugLogger as logger
 
 def safeDecode(string):
-    if not isinstance(string, unicode):
+    if hasattr('decode', string):
         try:
             string = string.decode('utf-8')
         except UnicodeDecodeError:
@@ -107,7 +107,7 @@ def translate(srcString):
 
     # No translations found:
     if len(results)==0:
-        if config.config.debugTranslation:
+        if config.debugTranslation:
             logger.log('Translation not found for "%s"'%srcString)
     return results.keys()
 
@@ -122,10 +122,7 @@ class TranslatableString:
         Constructor looks up the string in all of the translation databases, storing
         the various translations it finds.
         """
-        if isinstance(untranslatedString, unicode):
-            untranslatedString = safeDecode(untranslatedString)
-        else:
-            untranslatedString = safeDecode(untranslatedString)
+        untranslatedString = safeDecode(untranslatedString)
         self.untranslatedString = untranslatedString
         self.translatedStrings = translate(untranslatedString)
 
@@ -249,7 +246,7 @@ def loadTranslationsFromPackageMoFiles(packageName, getDependencies=True):
                 try:
                     translationDbs.append(GettextTranslationDb(moFile))
                     moFiles[moFile] = None
-                except (AttributeError, IndexError), inst:
+                except (AttributeError, IndexError):
                     if config.config.debugTranslation:
                         #import traceback
                         #logger.log(traceback.format_exc())

@@ -15,17 +15,17 @@ __author__ = 'Zack Cerza <zcerza@redhat.com>'
 #                                                                            #
 ##############################################################################
 
-import tree
-import predicate
-from config import config
-from utils import Lock
-import rawinput
+from dogtail import tree
+from dogtail import predicate
+from dogtail.config import config
+from dogtail.utils import Lock
+from dogtail import rawinput
 
 #FocusError = "FocusError: %s not found"
 class FocusError(Exception):
     pass
 
-import errors
+import dogtail.errors
 def focusFailed(pred):
     errors.warn('The requested widget could not be focused: %s' % pred.debugName)
 
@@ -41,16 +41,16 @@ class FocusBase:
         # Fold all the Node's AT-SPI properties into the Focus object.
         try: return getattr(self.node, name)
         except AttributeError:
-            raise AttributeError, name
+            raise AttributeError(name)
 
     def __setattr__ (self, name, value):
         # Fold all the Node's AT-SPI properties into the Focus object.
         if name == 'node':
-            self.__class__.__dict__[name] = value
+            self.__class__.node = value
         else:
             try: setattr(self.node, name, value)
             except AttributeError:
-                raise AttributeError, name
+                raise AttributeError(name)
 
 class FocusApplication (FocusBase):
     """
@@ -64,8 +64,8 @@ class FocusApplication (FocusBase):
         try:
             pred = predicate.IsAnApplicationNamed(name)
             app = self.desktop.findChild(pred, recursive = False, retry = False)
-        except tree.SearchError, desc:
-            if config.fatalErrors: raise FocusError, name
+        except tree.SearchError as desc:
+            if config.fatalErrors: raise FocusError(name)
             else:
                 focusFailed(pred)
                 return False
@@ -99,7 +99,7 @@ class FocusWindow (FocusBase):
             FocusDialog.node = None
             FocusWidget.node = None
         else:
-            if config.fatalErrors: raise FocusError, pred.debugName
+            if config.fatalErrors: raise FocusError(pred.debugName)
             else:
                 focusFailed(pred)
                 return False
@@ -122,7 +122,7 @@ class FocusDialog (FocusBase):
             FocusDialog.node = result
             FocusWidget.node = None
         else:
-            if config.fatalErrors: raise FocusError, pred.debugName
+            if config.fatalErrors: raise FocusError(pred.debugName)
             else:
                 focusFailed(pred)
                 return False
@@ -153,14 +153,14 @@ class FocusWidget (FocusBase):
                 result = FocusApplication.node.findChild(pred, requireResult = False, retry = False)
                 if result: FocusWidget.node = result
             except AttributeError:
-                if config.fatalErrors: raise FocusError, name
+                if config.fatalErrors: raise FocusError(name)
                 else:
                     focusFailed(pred)
                     return False
 
         if result == None:
             FocusWidget.node = result
-            if config.fatalErrors: raise FocusError, pred.debugName
+            if config.fatalErrors: raise FocusError(pred.debugName)
             else:
                 focusFailed(pred)
                 return False
@@ -171,7 +171,7 @@ class FocusWidget (FocusBase):
         If name, roleName or description are specified, search for a widget that matches and refocus on it.
         """
         if not name and not roleName and not description:
-            raise TypeError, ENOARGS
+            raise TypeError(ENOARGS)
 
         # search for a widget.
         pred = predicate.GenericPredicate(name = name,
@@ -184,12 +184,12 @@ class Focus (FocusBase):
     """
 
     def __getattr__ (self, name):
-        raise AttributeError, name
+        raise AttributeError(name)
     def __setattr__(self, name, value):
         if name in ('application', 'dialog', 'widget', 'window'):
             self.__dict__[name] = value
         else:
-            raise AttributeError, name
+            raise AttributeError(name)
 
     desktop = tree.root
     application = FocusApplication()
@@ -339,7 +339,7 @@ class Select (Action):
         action must be 'select' or 'deselect'.
         """
         if action not in (self.select, self.deselect):
-            raise ValueError, action
+            raise ValueError(action)
         Action.__init__(self, action)
 
     def __call__ (self, name = '', roleName = '', description = '', delay = config.actionDelay):
@@ -365,7 +365,7 @@ def keyCombo(combo):
         rawinput.keyCombo(combo)
 
 def run(application, arguments = '', appName = ''):
-    from utils import run as utilsRun
+    from dogtail.utils import run as utilsRun
     pid = utilsRun(application + ' ' + arguments, appName = appName)
     focus.application(application)
     return pid

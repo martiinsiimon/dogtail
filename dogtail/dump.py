@@ -16,7 +16,7 @@ def plain (node, fileName = None):
             crawl(child, depth + 1)
 
     def dumpFile(item, depth): _file.write(spacer*depth + str(item) + '\n')
-    def dumpStdOut(item, depth): print spacer*depth + str(item)
+    def dumpStdOut(item, depth): print (spacer*depth + str(item))
     if fileName:
         dump = dumpFile
         _file = file(fileName, 'w')

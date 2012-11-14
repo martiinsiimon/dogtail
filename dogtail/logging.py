@@ -13,7 +13,7 @@ import os
 import sys
 import time
 import datetime
-from config import config
+from dogtail.config import config
 import codecs
 
 # Timestamp class for file logs
@@ -106,8 +106,8 @@ class Logger:
             self.findUniqueName()
         else:
             # If path doesn't exist, raise an exception
-            raise IOError, \
-                    "Log path %s does not exist or is not a directory" % logDir
+            raise IOError(
+                    "Log path %s does not exist or is not a directory" % config.logDir)
 
     def findUniqueName(self):
         # generate a logfile name and check if it already exists
@@ -126,7 +126,7 @@ class Logger:
 
     def createFile(self):
         # Try to create the file and write the header info
-        print "Creating logfile at %s ..." % self.fileName
+        print ("Creating logfile at %s ..." % self.fileName)
         self.file = codecs.open(self.fileName, mode = 'wb', encoding = \
                 'utf-8')
         self.file.write("##### " + os.path.basename(self.fileName) + '\n')
@@ -139,7 +139,8 @@ class Logger:
 
         If force is True, log to a file irrespective of config.logDebugToFile.
         """
-        message = message.decode('utf-8', 'replace')
+        if hasattr('decode', message):
+            message = message.decode('utf-8', 'replace')
 
         # Try to open and write the result to the log file.
         if isinstance(self.file, bool) and (force or config.logDebugToFile):
@@ -151,8 +152,8 @@ class Logger:
             self.file.flush()
 
         if self.stdOut and config.logDebugToStdOut: 
-            if newline: print message
-            else: print message,
+            if newline: print (message)
+            else: print (message,)
 
 class ResultsLogger(Logger):
     """
@@ -177,8 +178,8 @@ class ResultsLogger(Logger):
             value = value[0]
             entry = str(key) + ":      " + str(value)
         else:
-            raise ValueError, entry
-            print "Method argument requires a 1 {key: value} dict. Supplied argument not one {key: value}"
+            raise ValueError(entry)
+            print("Method argument requires a 1 {key: value} dict. Supplied argument not one {key: value}")
 
         Logger.log(self, self.stamper.entryStamp() + "      " + entry, force = True)
 

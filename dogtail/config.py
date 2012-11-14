@@ -155,7 +155,7 @@ class _Config(object):
 
     def __setattr__(self, name, value):
         if name not in config.defaults:
-            raise AttributeError, name + " is not a valid option."
+            raise AttributeError(name + " is not a valid option.")
 
         elif _Config.defaults[name] != value or \
                 _Config.options.get(name, _Config.invalidValue) != value:
@@ -171,10 +171,10 @@ class _Config(object):
         try: return _Config.options[name]
         except KeyError:
             try: return _Config.defaults[name]
-            except KeyError: raise AttributeError, name + \
-                    " is not a valid option."
+            except KeyError: raise AttributeError (name + \
+                    " is not a valid option.")
 
-    def __createDir(cls, dirName, perms = 0777):
+    def __createDir(cls, dirName, perms = 0o777):
         """
         Creates a directory (if it doesn't currently exist), creating any
         parent directories it needs.
@@ -211,8 +211,8 @@ if __name__ == '__main__':
     def failOrPass(failure, description):
         if failure:
             anyFailed = True
-            print "FAILED: " + description
-        else: print "PASSED: " + description
+            print ("FAILED: " + description)
+        else: print ("PASSED: " + description)
 
     # BEGIN tests
 
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     for option in config.defaults.keys():
         failure = failure or not (getattr(config, option) == \
                 config.defaults[option])
-        print failure, option, getattr(config, option), config.defaults[option]
+        print (failure, option, getattr(config, option), config.defaults[option])
     failOrPass(failure, "Reading all default values")
 
     failure = True

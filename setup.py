@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __author__ = "Zack Cerza <zcerza@redhat.com>"
 
 from distutils.core import setup
@@ -18,7 +18,7 @@ def examples_data():
     dataList = os.listdir(os.curdir + '/examples/data/')
     result = []
     for data in dataList:
-		result = result + ['examples/data/' + data]
+        result = result + ['examples/data/' + data]
     return result
 
 def sniff_icons():
@@ -44,7 +44,7 @@ def scripts():
     list = os.listdir(os.curdir + '/scripts/')
     result = ['sniff/sniff']
     for file in list:
-		result = result + ['scripts/' + file]
+        result = result + ['scripts/' + file]
     return result
 
 def session_file():

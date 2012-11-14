@@ -111,7 +111,7 @@ try:
     # encoding we're using, otherwise python gets confused later.
     gold = open(path[0] + '/data/UTF-8-demo.txt', encoding='utf-8').readlines()
 except IOError:
-    print "File open failed"
+    print ("File open failed")
 
 # Read the test file for comparison
 filepath = environ['HOME'] + '/Desktop/UTF8demo.txt'

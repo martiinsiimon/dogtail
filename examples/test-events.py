@@ -17,7 +17,7 @@ def callback(event):
         sourceStr = " source:%s"% str(source)
     else:
         sourceStr = ""
-    print "Got event: %s%s"%(event.type, sourceStr)
+    print ("Got event: %s%s"%(event.type, sourceStr))
 
 #listener = atspi.EventListener(callback, ["window:create"])
 #listener = atspi.EventListener(callback, ["focus:", "object:", "window:"])
