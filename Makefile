@@ -1,14 +1,14 @@
 # dogtail *development* Makefile
 
 all:
-	python setup.py build_ext --inplace
+	python3 setup.py build
 
 install:
-	python setup.py install
+	python3 setup.py install --root=$(DESTDIR)
 
 clean:
 	rm -rf api_docs/
-	python setup.py clean
+	python3 setup.py clean
 	rm -f MANIFEST
 	rm -rf build dist
 	
@@ -19,20 +19,20 @@ export camelCAPS='[a-z_][a-zA-Z0-9_]*$$'
 export StudlyCaps='[a-zA-Z_][a-zA-Z0-9_]*$$'
 
 check:
-	pylint --indent-string="    " --class-rgx=${StudlyCaps} --function-rgx=${camelCAPS} --method-rgx=${camelCAPS} --variable-rgx=${camelCAPS} --argument-rgx=${camelCaps} dogtail sniff/sniff examples/*.py recorder/dogtail-recorder scripts/*.py
+	pylint --indent-string="    " --class-rgx=${StudlyCaps} --function-rgx=${camelCAPS} --method-rgx=${camelCAPS} --variable-rgx=${camelCAPS} --argument-rgx=${camelCaps} dogtail sniff/sniff3 examples/*.py scripts/*.py
 
 tarball:
-	python setup.py sdist
+	python3 setup.py sdist
 
 rpm: tarball
 	# Build using the custom rpmrc in the rpms/ sub-dir
-	rpmbuild -tb dist/dogtail-*.tar.gz
+	rpmbuild -tb dist/dogtail3-*.tar.gz
 	# Move the source and binary RPMs to dist/
 	mv ~/rpmbuild/RPMS/noarch/* dist/
 
 srpm: rpm_prep
 	# Build using the custom rpmrc in the rpms/ sub-dir
-	rpmbuild --rcfile /usr/lib/rpm/rpmrc:/usr/lib/rpm/redhat/rpmrc:`pwd`/rpms/tmp.rpmrc  -ts dist/dogtail-*.tar.gz
+	rpmbuild --rcfile /usr/lib/rpm/rpmrc:/usr/lib/rpm/redhat/rpmrc:`pwd`/rpms/tmp.rpmrc  -ts dist/dogtail3-*.tar.gz
 	# Move the source and binary RPMs to dist/
 	mv rpms/SRPMS/* dist/
 	rm -rf rpms/

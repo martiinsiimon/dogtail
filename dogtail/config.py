@@ -7,7 +7,12 @@ import os
 import sys
 import locale
 
+def _userTmpDir(baseName):
+    # i.e. /tmp/dogtail-foo
+    return '-'.join(('/'.join(('/tmp', baseName)), os.environ['USER']))
+
 class _Config(object):
+
     """
     Contains configuration parameters for the dogtail run.
 
@@ -99,49 +104,49 @@ class _Config(object):
     logDebugToStdOut (boolean):
     Whether to print log output to console or not (default True).
     """
-    def _getScriptName(self):
-        return os.path.basename(sys.argv[0]).replace('.py','')
-    scriptName = property(_getScriptName)
+    @property
+    def scriptName(self):
+        return os.path.basename(sys.argv[0]).replace('.py', '')
 
-    def _getEncoding(self):
+    @property
+    def encoding(self):
         return locale.getpreferredencoding().lower()
-    encoding = property(_getEncoding)
 
     defaults = {
-            # Storage
-            'scratchDir' : '/tmp/dogtail/',
-            'dataDir' : '/tmp/dogtail/data/',
-            'logDir' : '/tmp/dogtail/logs/',
-            'scriptName' : scriptName.fget(None),
-            'encoding' : encoding.fget(None),
-            'configFile' : None,
-            'baseFile' : None,
+        # Storage
+        'scratchDir': '/'.join((_userTmpDir('dogtail'), '')),
+        'dataDir': '/'.join((_userTmpDir('dogtail'), 'data', '')),
+        'logDir': '/'.join((_userTmpDir('dogtail'), 'logs', '')),
+        'scriptName': scriptName.fget(None),
+        'encoding': encoding.fget(None),
+        'configFile': None,
+        'baseFile': None,
 
-            # Timing and Limits
-            'actionDelay' : 1.0,
-            'typingDelay' : 0.075,
-            'runInterval' : 0.5,
-            'runTimeout' : 30,
-            'searchBackoffDuration' : 0.5,
-            'searchWarningThreshold' : 3,
-            'searchCutoffCount' : 20,
-            'defaultDelay' : 0.5,
-            'childrenLimit' : 100,
+        # Timing and Limits
+        'actionDelay': 1.0,
+        'typingDelay': 0.1,
+        'runInterval': 0.5,
+        'runTimeout': 30,
+        'searchBackoffDuration': 0.5,
+        'searchWarningThreshold': 3,
+        'searchCutoffCount': 20,
+        'defaultDelay': 0.5,
+        'childrenLimit': 100,
 
-            # Debug
-            'debugSearching' : False,
-            'debugSleep' : False,
-            'debugSearchPaths' : False,
-            'logDebugToStdOut' : True,
-            'absoluteNodePaths' : False,
-            'ensureSensitivity' : False,
-            'debugTranslation' : False,
-            'blinkOnActions' : False,
-            'fatalErrors' : False,
-            'checkForA11y' : True,
+        # Debug
+        'debugSearching': False,
+        'debugSleep': False,
+        'debugSearchPaths': False,
+        'logDebugToStdOut': True,
+        'absoluteNodePaths': False,
+        'ensureSensitivity': False,
+        'debugTranslation': False,
+        'blinkOnActions': False,
+        'fatalErrors': False,
+        'checkForA11y': True,
 
-            # Logging
-            'logDebugToFile' : True
+        # Logging
+        'logDebugToFile': True
     }
 
     options = {}
@@ -161,20 +166,23 @@ class _Config(object):
                 _Config.options.get(name, _Config.invalidValue) != value:
             if 'Dir' in name:
                 _Config.__createDir(value)
-                if value[-1] != os.path.sep: value = value + os.path.sep
+                if value[-1] != os.path.sep:
+                    value = value + os.path.sep
             elif name == 'logDebugToFile':
-                import logging
+                from dogtail import logging
                 logging.debugLogger = logging.Logger('debug', value)
             _Config.options[name] = value
 
     def __getattr__(self, name):
-        try: return _Config.options[name]
+        try:
+            return _Config.options[name]
         except KeyError:
-            try: return _Config.defaults[name]
-            except KeyError: raise AttributeError (name + \
-                    " is not a valid option.")
+            try:
+                return _Config.defaults[name]
+            except KeyError:
+                raise AttributeError("%s is not a valid option." % name)
 
-    def __createDir(cls, dirName, perms = 0o777):
+    def __createDir(cls, dirName, perms=0o777):
         """
         Creates a directory (if it doesn't currently exist), creating any
         parent directories it needs.
@@ -182,13 +190,15 @@ class _Config(object):
         If perms is None, create with python's default permissions.
         """
         dirName = os.path.abspath(dirName)
-        #print "Checking for %s ..." % dirName,
+        # print "Checking for %s ..." % dirName,
         if not os.path.isdir(dirName):
             if perms:
                 umask = os.umask(0)
                 os.makedirs(dirName, perms)
                 os.umask(umask)
-            else: os.makedirs(dirName)
+            else:
+                # This is probably a dead code - no other functions call this without the permissions set
+                os.makedirs(dirName)  # pragma: no cover
     __createDir = classmethod(__createDir)
 
     def load(self, dict):
@@ -197,7 +207,7 @@ class _Config(object):
         """
         _Config.options.update(dict)
 
-    def     reset(self):
+    def reset(self):
         """
         Resets all settings to their defaults.
         """
@@ -205,47 +215,3 @@ class _Config(object):
 
 
 config = _Config()
-
-if __name__ == '__main__':
-    anyFailed = False
-    def failOrPass(failure, description):
-        if failure:
-            anyFailed = True
-            print ("FAILED: " + description)
-        else: print ("PASSED: " + description)
-
-    # BEGIN tests
-
-    failure = False
-    for option in config.defaults.keys():
-        failure = failure or not (getattr(config, option) == \
-                config.defaults[option])
-        print (failure, option, getattr(config, option), config.defaults[option])
-    failOrPass(failure, "Reading all default values")
-
-    failure = True
-    failure = config.ensureSensitivity != config.defaults['ensureSensitivity']
-    config.ensureSensitivity = False
-    failure = failure or config.ensureSensitivity == True
-    config.ensureSensitivity = True
-    failure = failure or config.ensureSensitivity != True
-    failOrPass(failure, "Setting ensureSensitivity")
-
-    failure = True
-    failure = not os.path.isdir(config.defaults['scratchDir'])
-    failure = failure or not os.path.isdir(config.defaults['logDir'])
-    failure = failure or not os.path.isdir(config.defaults['dataDir'])
-    failOrPass(failure, "Looking for default directories")
-
-    failure = True
-    config.scratchDir = '/tmp/dt'
-    failure = not os.path.isdir('/tmp/dt')
-    config.logDir = '/tmp/dt_log/'
-    failure = failure or not os.path.isdir('/tmp/dt_log/')
-    config.dataDir = '/tmp/dt_data'
-    failure = failure or not os.path.isdir('/tmp/dt_data')
-    failOrPass(failure, "Changing default directories")
-
-    # END tests
-
-    if anyFailed: sys.exit(1)

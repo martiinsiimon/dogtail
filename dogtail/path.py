@@ -4,7 +4,8 @@ Author: David Malcolm <dmalcolm@redhat.com>
 """
 __author__ = """David Malcolm <dmalcolm@redhat.com>"""
 
-class SearchPath:
+
+class SearchPath(object):
     """
     Class used by the recording framework (and for more verbose script
     logging) for identifying nodes in a persistent way, independent of the
@@ -29,21 +30,18 @@ class SearchPath:
     def __str__(self):
         result = "{"
         for (predicate, isRecursive) in self.__list:
-            result += "/(%s,%s)"%(predicate.describeSearchResult(), isRecursive)
-        return result+"}"
+            result += "/(%s,%s)" % (
+                predicate.describeSearchResult(), isRecursive)
+        return result + "}"
 
     # We need equality to work so that dicts of these work:
     def __eq__(self, other):
-        # print "eq: self:%s"%self
-        # print "       other:%s"%other
         if len(self.__list) != len(other.__list):
-            # print "nonequal length"
             return False
         else:
             for i in range(len(self.__list)):
-                if self.__list[i]!=other.__list[i]:
+                if self.__list[i] != other.__list[i]:
                     return False
-        # print True
         return True
 
     def append(self, predicate, isRecursive):
@@ -77,19 +75,19 @@ class SearchPath:
         return None.
         """
         for i in range(len(self.__list)):
-            if self.__list[i]!=other.__list[i]:
+            if self.__list[i] != other.__list[i]:
                 break
-        if i>0:
+        if i > 0:
             # Slice from this point to the end:
             result = SearchPath()
-            result.__list = other.__list[i+1:]
+            result.__list = other.__list[i + 1:]
 
             if False:
                 print("....................")
-                print("from %s"%self)
-                print("to %s"%other)
-                print("i=%s"%i)
-                print("relative path %s"%result)
+                print("from %s" % self)
+                print("to %s" % other)
+                print("i=%s" % i)
+                print("relative path %s" % result)
                 print("....................")
 
             return result

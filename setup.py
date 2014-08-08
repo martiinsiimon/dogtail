@@ -21,13 +21,22 @@ def examples_data():
         result = result + ['examples/data/' + data]
     return result
 
+def tests():
+    import os
+    exList = os.listdir(os.curdir + '/tests/')
+    result = []
+    for ex in exList:
+        if ex.split('.')[-1] == 'py':
+            result = result + ['tests/' + ex]
+    return result
+
 def sniff_icons():
     import os
-    list = os.listdir(os.curdir + '/sniff/icons/')
+    list = os.listdir(os.curdir + '/sniff3/icons/')
     result = []
     for file in list:
         if file.split('.')[-1] in ('xpm'):
-            result = result + ['sniff/icons/' + file]
+            result = result + ['sniff3/icons/' + file]
     return result
 
 def icons(ext_tuple):
@@ -42,7 +51,7 @@ def icons(ext_tuple):
 def scripts():
     import os
     list = os.listdir(os.curdir + '/scripts/')
-    result = ['sniff/sniff']
+    result = ['sniff3/sniff3']
     for file in list:
         result = result + ['scripts/' + file]
     return result
@@ -52,25 +61,27 @@ def session_file():
     return result
 
 setup (
-        name = 'dogtail',
-        version = '0.8.1',
-        description = """GUI test tool and automation framework that uses Accessibility (a11y) technologies to communicate with desktop applications.""",
+        name = 'dogtail3',
+        version = '0.9.0-4.beta1',
+        description = """GUI test tool and automation framework that uses Accessibility (a11y) technologies to communicate with desktop applications. Python3 compatible version.""",
         author = """Zack Cerza <zcerza@redhat.com>,
 Ed Rousseau <rousseau@redhat.com>,
-David Malcolm <dmalcolm@redhat.com>
+David Malcolm <dmalcolm@redhat.com>,
 Vitezslav Humpa <vhumpa@redhat.com>""",
         author_email = 'dogtail-list@gnome.org',
         url = 'http://dogtail.fedorahosted.org/',
         packages = ['dogtail'],
         scripts = scripts(),
         data_files = [
-                                ('share/doc/dogtail/examples',
+                                ('share/doc/dogtail3/examples',
                                         examples() ),
-                                ('share/doc/dogtail/examples/data',
+                                ('share/doc/dogtail3/examples/data',
                                         examples_data() ),
-                                ('share/dogtail/glade', ['sniff/sniff.ui']),
-                                ('share/dogtail/icons', sniff_icons() ),
-                                ('share/applications', ['sniff/sniff.desktop']),
+                                ('share/doc/dogtail3/tests',
+                                        tests() ),
+                                ('share/dogtail3/glade', ['sniff3/sniff3.ui']),
+                                ('share/dogtail3/icons', sniff_icons() ),
+                                ('share/applications', ['sniff3/sniff3.desktop']),
                                 ('share/icons/hicolor/48x48/apps', icons('png')),
                                 ('share/icons/hicolor/scalable/apps', icons('svg'))
                                 ],

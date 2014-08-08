@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Dogtail demo script using tree.py
 # FIXME: Use TC.
 __author__ = 'Zack Cerza <zcerza@redhat.com'
@@ -48,7 +48,7 @@ try:
     saveas = gedit.child(roleName='file chooser')
 except tree.SearchError:
     try:
-        saveas = gedit.dialog(u'Save As\u2026')
+        saveas = gedit.dialog('Save As\\u2026')
     except tree.SearchError:
         saveas = gedit.dialog('Save as...')
 
