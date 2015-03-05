@@ -1,6 +1,6 @@
 Name:		dogtail3
-Version:	0.9.0
-Release:	4.beta1
+Version:	0.9.1
+Release:	0.1.beta1
 Summary:	GUI testing tool and automation framework. Python3 compatible version.
 
 License:	GPLv2
