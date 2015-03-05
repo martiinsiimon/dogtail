@@ -17,7 +17,6 @@ Requires: python3-cairo
 Requires: rpm-python3
 Requires: xorg-x11-xinit
 
-
 %description
 GUI test tool and automation framework that uses assistive technologies to
 communicate with desktop applications. Python3 compatible version.
@@ -25,10 +24,8 @@ communicate with desktop applications. Python3 compatible version.
 %prep
 %setup -q -n %{name}-%{version}-%{release}
 
-
 %build
 python3 ./setup.py build
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -36,11 +33,19 @@ python3 ./setup.py install -O2 --root=$RPM_BUILD_ROOT --record=%{name}.files
 rm -rf $RPM_BUILD_ROOT/%{_docdir}/dogtail3
 find examples -type f -exec chmod 0644 \{\} \;
 desktop-file-install $RPM_BUILD_ROOT/%{_datadir}/applications/sniff3.desktop \
-  --vendor=fedora \
   --dir=$RPM_BUILD_ROOT/%{_datadir}/applications \
-  --add-category X-Fedora \
-  --delete-original
 
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
