@@ -881,38 +881,32 @@ class Node(object):
         and x.showing is True". isLambda does not have to be set, it's kept only for api compatibility.
         """
         # always use lambda search, but we keep isLambda param for api compatibility
+        compare_func = None
         if isLambda is True or isinstance(pred, LambdaType):
-            nodes = self.findChildren(predicate.GenericPredicate(), recursive=recursive)
-            result = []
-            for node in nodes:
-                try:
-                    if pred(node):
-                        result.append(node)
-                except:
-                    pass
-            return result
-        if isinstance(pred, predicate.Predicate):
-            pred = pred.satisfiedByNode
-        if not recursive:
-            cIter = iter(self)
-            result = []
-            while True:
-                try:
-                    child = next(cIter)
-                except StopIteration:
-                    break
-                if child is not None and pred(child):
-                    result.append(child)
-            return result
+            compare_func = pred
         else:
-            descendants = []
-            while True:
-                try:
-                    descendants = pyatspi.utils.findAllDescendants(self, pred)
-                    break
-                except (GLib.GError, TypeError):
-                    continue
-            return descendants
+            assert isinstance(pred, predicate.Predicate)
+            compare_func = pred.satisfiedByNode
+
+        results = []
+        numAttempts = 0
+        while numAttempts < config.searchCutoffCount:
+            if numAttempts >= config.searchWarningThreshold or config.debugSearching:
+                logger.log("a11y errors caught, making attempt %i" % numAttempts)
+            try:
+                if recursive:
+                    results = pyatspi.utils.findAllDescendants(self, compare_func)
+                else:
+                    results = list(filter(compare_func, self.children))
+                break
+            except (GLib.GError, TypeError):
+                numAttempts += 1
+                if numAttempts == config.searchCutoffCount:
+                    logger.log("warning: errors caught from the a11y tree, giving up search")
+                else:
+                    sleep(config.searchBackoffDuration)
+                continue
+        return results
 
     # The canonical "search above this node" method:
     def findAncestor(self, pred):
