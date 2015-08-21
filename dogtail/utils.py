@@ -267,6 +267,8 @@ def bailBecauseA11yIsDisabled():
             content = f.read()
         if content.find('epydoc') != -1:
             return  # pragma: no cover
+        if content.find('sphinx') != -1:
+            return  # pragma: no cover
     except:   # pragma: no cover
         pass  # pragma: no cover
     logger.log("Dogtail requires that Assistive Technology support be enabled."
