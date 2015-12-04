@@ -3,8 +3,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 """
 Various utilities
-
-Authors: Ed Rousseau <rousseau@redhat.com>, Zack Cerza <zcerza@redhat.com, David Malcolm <dmalcolm@redhat.com>
 """
 
 __author__ = """Ed Rousseau <rousseau@redhat.com>,
@@ -86,7 +84,8 @@ def screenshot(file='screenshot.png', timeStamp=True):
 def run(string, timeout=config.runTimeout, interval=config.runInterval, desktop=None, dumb=False, appName=''):
     """
     Runs an application. [For simple command execution such as 'rm *', use os.popen() or os.system()]
-    If dumb is omitted or is False, polls at interval seconds until the application is finished starting, or until timeout is reached.
+    If dumb is omitted or is False, polls at interval seconds until the application is finished starting, or until
+    timeout is reached.
     If dumb is True, returns when timeout is reached.
     """
     if not desktop:
@@ -307,7 +306,8 @@ def checkForA11yInteractively():  # pragma: no cover
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (Gtk.STOCK_QUIT, Gtk.ResponseType.CLOSE,
                          "_Enable", Gtk.ResponseType.ACCEPT))
-    question = """Dogtail requires that Assistive Technology Support be enabled for it to function. Would you like to enable Assistive Technology support now?
+    question = """Dogtail requires that Assistive Technology Support be enabled for it to function. Would you like to
+enable Assistive Technology support now?
 
 Note that you will have to log out for the change to fully take effect.
     """.strip()
@@ -355,8 +355,9 @@ class GnomeShell(object):  # pragma: no cover
             if ancestor.roleName == 'panel':
                 return ancestor.findChildren(predicate.GenericPredicate(roleName='label'))
         from dogtail.tree import SearchError
-        raise SearchError("Could not find the Application menu based on '%s' item. Please provide an existing reference item"
-                          % search_by_item)
+        raise SearchError(
+            "Could not find the Application menu based on '%s' item. Please provide an existing reference item"
+            % search_by_item)
 
     def getApplicationMenuButton(self, app_name):
         """
@@ -379,7 +380,7 @@ class GnomeShell(object):  # pragma: no cover
         except:
             menu_items = self.getApplicationMenuList(item)
         for node in menu_items:
-            if node.name == item or bytes(node,name, 'utf-8') == item.encode('ascii', 'ignore'):
+            if node.name == item or bytes(node, name, 'utf-8') == item.encode('ascii', 'ignore'):
                 return node
         raise Exception(
             'Could not find the item, did application focus change?')

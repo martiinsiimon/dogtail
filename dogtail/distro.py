@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-"""Handles differences between different distributions
-
-Authors: Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"""
+"""
+Handles differences between different distributions
+"""
 __author__ = "Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"
 
 
@@ -26,6 +26,7 @@ class DistributionNotSupportedError(Exception):  # pragma: no cover
     def __str__(self):
         return self.distro + ". " + DistributionNotSupportedError.PATCH_MESSAGE
 
+
 class PackageNotFoundError(Exception):
     """
     Error finding the requested package.
@@ -34,6 +35,7 @@ class PackageNotFoundError(Exception):
 
 global packageDb
 global distro
+
 
 class PackageDb(object):
     """
@@ -89,6 +91,7 @@ class PackageDb(object):
         """
         raise NotImplementedError
 
+
 class _RpmPackageDb(PackageDb):  # pragma: no cover
     def __init__(self):
         PackageDb.__init__(self)
@@ -129,6 +132,7 @@ class _RpmPackageDb(PackageDb):  # pragma: no cover
                         result[depName] = None
             return list(result.keys())
         raise PackageNotFoundError(packageName)
+
 
 class _AptPackageDb(PackageDb):
     def __init__(self):
@@ -369,4 +373,3 @@ def detectDistro():
 
 distro = detectDistro()
 packageDb = distro.packageDb
-

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-"""Utility functions for 'dumping' trees of Node objects.
-
-Author: Zack Cerza <zcerza@redhat.com>"""
+"""
+Utility functions for 'dumping' trees of Node objects.
+"""
 __author__ = "Zack Cerza <zcerza@redhat.com>"
 
 
@@ -33,4 +33,3 @@ def plain(node, fileName=None):
         dump = dumpStdOut
 
     crawl(node, 0)
-

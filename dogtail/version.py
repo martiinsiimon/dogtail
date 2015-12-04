@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-"""Handles versioning of software packages
-
-Author: Dave Malcolm <dmalcolm@redhat.com>"""
+"""
+Handles versioning of software packages
+"""
 __author__ = 'Dave Malcolm <dmalcolm@redhat.com>'
 
 import re
 import unittest
+
 
 class Version(object):
     """

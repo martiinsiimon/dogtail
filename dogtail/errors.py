@@ -28,4 +28,3 @@ class DependencyNotFoundError(Exception):
     A dependency was not found.
     """
     pass
-

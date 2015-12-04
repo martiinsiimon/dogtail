@@ -5,7 +5,8 @@ import unittest
 
 class GtkDemoTest(unittest.TestCase):
     """
-    TestCase subclass which handles bringing up and shutting down gtk3-demo as a fixture.  Used for writing other test cases.
+    TestCase subclass which handles bringing up and shutting down gtk3-demo as a fixture.  Used for writing other test
+    cases.
     """
 
     def setUp(self):

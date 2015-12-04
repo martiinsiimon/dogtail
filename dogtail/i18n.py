@@ -3,10 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 """
 Internationalization facilities
-
-Authors: David Malcolm <dmalcolm@redhat.com>
 """
-
 __author__ = """David Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"""
 
 from dogtail import config
@@ -24,6 +21,7 @@ whatever translation databases it wants.
 """
 translationDbs = []
 
+
 class TranslationDb(object):
     """
     Abstract base class representing a database of translations
@@ -40,6 +38,7 @@ class TranslationDb(object):
         (ii) "Suivant" for the next page in a wizard.
         """
         raise NotImplementedError
+
 
 class GettextTranslationDb(TranslationDb):
     """
@@ -80,6 +79,7 @@ class GettextTranslationDb(TranslationDb):
 
         return list(results.keys())
 
+
 def translate(srcString):
     """
     Look up srcString in the various translation databases (if any), returning
@@ -97,6 +97,7 @@ def translate(srcString):
         if config.config.debugTranslation:
             logger.log('Translation not found for "%s"' % srcString)
     return list(results.keys())
+
 
 class TranslatableString(object):
     """
@@ -179,8 +180,7 @@ def isMoFile(filename, language=''):
     if re.match('(.*)\\.mo$', filename):
         if not language:
             return True
-        elif re.match('/usr/share/locale(.*)/%s(.*)/LC_MESSAGES/(.*)\\.mo$' %
-                       language, filename):
+        elif re.match('/usr/share/locale(.*)/%s(.*)/LC_MESSAGES/(.*)\\.mo$' % language, filename):
             return True
         else:
             return False
@@ -215,6 +215,7 @@ def getMoFilesForPackage(packageName, language='', getDependencies=True):
             result.extend(getMoFilesForPackage(dep, language, False))
 
     return result
+
 
 def loadTranslationsFromPackageMoFiles(packageName, getDependencies=True):
     """
