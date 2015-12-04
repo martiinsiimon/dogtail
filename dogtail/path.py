@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 """
 Author: David Malcolm <dmalcolm@redhat.com>
 """
@@ -25,34 +27,34 @@ class SearchPath(object):
     """
 
     def __init__(self):
-        self.__list = []
+        self.lst = []
 
     def __str__(self):
         result = "{"
-        for (predicate, isRecursive) in self.__list:
+        for (predicate, isRecursive) in self.lst:
             result += "/(%s,%s)" % (
                 predicate.describeSearchResult(), isRecursive)
         return result + "}"
 
     # We need equality to work so that dicts of these work:
     def __eq__(self, other):
-        if len(self.__list) != len(other.__list):
+        if len(self.lst) != len(other.lst):
             return False
         else:
-            for i in range(len(self.__list)):
-                if self.__list[i] != other.__list[i]:
+            for i in range(len(self.lst)):
+                if self.lst[i] != other.lst[i]:
                     return False
         return True
 
     def append(self, predicate, isRecursive):
         assert predicate
-        self.__list.append((predicate, isRecursive))
+        self.lst.append((predicate, isRecursive))
 
     def __iter__(self):
-        return iter(self.__list)
+        return iter(self.lst)
 
     def length(self):
-        return len(self.__list)
+        return len(self.lst)
 
     def makeScriptMethodCall(self):
         """
@@ -61,7 +63,7 @@ class SearchPath(object):
         Generate the Python source code that will carry out this search.
         """
         result = ""
-        for (predicate, isRecursive) in self.__list:
+        for (predicate, isRecursive) in self.lst:
             # print predicate
             # print self.generateVariableName(predicate)
             result += "." + predicate.makeScriptMethodCall(isRecursive)
@@ -74,13 +76,14 @@ class SearchPath(object):
         to this one (a copy of the second part of the list).    Otherwise
         return None.
         """
-        for i in range(len(self.__list)):
-            if self.__list[i] != other.__list[i]:
+        i = 0
+        for i in range(len(self.lst)):
+            if self.lst[i] != other.lst[i]:
                 break
         if i > 0:
             # Slice from this point to the end:
             result = SearchPath()
-            result.__list = other.__list[i + 1:]
+            result.lst = other.lst[i + 1:]
 
             if False:
                 print("....................")
@@ -100,9 +103,9 @@ class SearchPath(object):
         """
         result = SearchPath()
         for i in range(n):
-            result.__list.append(self.__list[i])
+            result.lst.append(self.lst[i])
         return result
 
     def getPredicate(self, i):
-        (predicate, isRecursive) = self.__list[i]
+        (predicate, _) = self.lst[i]
         return predicate

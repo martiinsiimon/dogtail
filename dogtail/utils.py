@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 """
 Various utilities
 
@@ -9,7 +11,6 @@ __author__ = """Ed Rousseau <rousseau@redhat.com>,
 Zack Cerza <zcerza@redhat.com,
 David Malcolm <dmalcolm@redhat.com>
 """
-
 import os
 import sys
 import subprocess

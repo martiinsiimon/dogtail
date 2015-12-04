@@ -2,7 +2,7 @@
 <interface>
   <!-- interface-requires gtk+ 3.10 -->
   <!-- interface-naming-policy toplevel-contextual -->
-  <object class="GtkWindow" id="Sniff3">
+  <object class="GtkWindow" id="Sniff">
     <property name="width_request">325</property>
     <property name="height_request">475</property>
     <property name="visible">True</property>

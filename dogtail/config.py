@@ -1,15 +1,19 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+import locale
+import os
+import sys
+
 """
 The configuration module.
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>, David Malcolm <dmalcolm@redhat.com>"
 
-import os
-import sys
-import locale
 
 def _userTmpDir(baseName):
     # i.e. /tmp/dogtail-foo
     return '-'.join(('/'.join(('/tmp', baseName)), os.environ['USER']))
+
 
 class _Config(object):
 
@@ -197,15 +201,16 @@ class _Config(object):
                 os.makedirs(dirName, perms)
                 os.umask(umask)
             else:
-                # This is probably a dead code - no other functions call this without the permissions set
+                # This is probably a dead code - no other functions call this without the
+                # permissions set
                 os.makedirs(dirName)  # pragma: no cover
     __createDir = classmethod(__createDir)
 
-    def load(self, dict):
+    def load(self, dictt):
         """
         Loads values from dict, preserving any options already set that are not overridden.
         """
-        _Config.options.update(dict)
+        _Config.options.update(dictt)
 
     def reset(self):
         """

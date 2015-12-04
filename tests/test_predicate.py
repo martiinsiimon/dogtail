@@ -1,11 +1,13 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+import dogtail.predicate
+import dogtail.tree
+import unittest
+
 """
 Unit tests for the dogtail.predicate package
 """
-import unittest
-import dogtail.tree
-import dogtail.predicate
 
 
 class TestPredicate(unittest.TestCase):

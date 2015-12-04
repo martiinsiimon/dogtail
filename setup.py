@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 __author__ = "Zack Cerza <zcerza@redhat.com>"
 
 from setuptools import setup
@@ -31,11 +31,11 @@ def tests():
 
 def sniff_icons():
     import os
-    list = os.listdir(os.curdir + '/sniff3/icons/')
+    list = os.listdir(os.curdir + '/sniff/icons/')
     result = []
     for file in list:
         if file.split('.')[-1] in ('xpm'):
-            result = result + ['sniff3/icons/' + file]
+            result = result + ['sniff/icons/' + file]
     return result
 
 def icons(ext_tuple):
@@ -50,7 +50,7 @@ def icons(ext_tuple):
 def scripts():
     import os
     list = os.listdir(os.curdir + '/scripts/')
-    result = ['sniff3/sniff3']
+    result = ['sniff/sniff']
     for file in list:
         result = result + ['scripts/' + file]
     return result
@@ -83,7 +83,6 @@ Vitezslav Humpa <vhumpa@redhat.com>""",
         ('share/dogtail/glade', ['sniff/sniff.ui']),
         ('share/dogtail/icons', sniff_icons()),
         ('share/applications', ['sniff/sniff.desktop']),
-        ('share/icons/hicolor/48x48/apps', icons('png')),
         ('share/icons/hicolor/scalable/apps', icons('svg'))
     ]
 )

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 """Handles versioning of software packages
 
 Author: Dave Malcolm <dmalcolm@redhat.com>"""

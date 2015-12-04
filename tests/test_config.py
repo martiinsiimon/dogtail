@@ -1,11 +1,12 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+import unittest
+import dogtail.config
+
 """
 Unit tests for the dogtail.config class
 """
-
-import unittest
-import dogtail.config
 
 
 class TestConfiguration(unittest.TestCase):

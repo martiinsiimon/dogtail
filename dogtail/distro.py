@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 """Handles differences between different distributions
 
 Authors: Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"""
 __author__ = "Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"
+
 
 import os
 import re
@@ -45,7 +49,7 @@ class PackageDb(object):
         """
         Method to get the version of an installed package as a Version
         instance (or raise an exception if not found)
-        
+
         Note: does not know about distributions' internal revision numbers.
         """
         raise NotImplementedError

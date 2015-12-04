@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+from dogtail import errors
+from dogtail import predicate
+from dogtail import rawinput
+from dogtail import tree
+from dogtail.config import config
+from dogtail.utils import Lock
+import os
+
 """
 Dogtail's procedural UI
 All the classes here are intended to be single-instance, except for Action.
@@ -15,16 +25,9 @@ __author__ = 'Zack Cerza <zcerza@redhat.com>'
 #
 #
 
-from dogtail import tree
-from dogtail import predicate
-from dogtail.config import config
-from dogtail.utils import Lock
-from dogtail import rawinput
 
 class FocusError(Exception):
     pass
-
-from dogtail import errors
 
 
 def focusFailed(pred):
@@ -58,7 +61,7 @@ class FocusBase(object):
                 raise AttributeError(name)
 
 
-class FocusApplication (FocusBase):
+class FocusApplication(FocusBase):
     """
     Keeps track of which application is currently focused.
     """
@@ -86,14 +89,14 @@ class FocusApplication (FocusBase):
         return True
 
 
-class FocusDesktop (FocusBase):
+class FocusDesktop(FocusBase):
     """
     This isn't used yet, and may never be used.
     """
     pass
 
 
-class FocusWindow (FocusBase):
+class FocusWindow(FocusBase):
     """
     Keeps track of which window is currently focused.
     """
@@ -122,7 +125,7 @@ class FocusWindow (FocusBase):
         return True
 
 
-class FocusDialog (FocusBase):
+class FocusDialog(FocusBase):
     """
     Keeps track of which dialog is currently focused.
     """
@@ -150,7 +153,7 @@ class FocusDialog (FocusBase):
         return True
 
 
-class FocusWidget (FocusBase):
+class FocusWidget(FocusBase):
     """
     Keeps track of which widget is currently focused.
     """
@@ -215,7 +218,7 @@ class FocusWidget (FocusBase):
         return self.findByPredicate(pred)
 
 
-class Focus (FocusBase):
+class Focus(FocusBase):
     """
     The container class for the focused application, dialog and widget.
     """
@@ -280,7 +283,7 @@ class Focus (FocusBase):
         return self.widget.findByPredicate(predicate.IsATextEntryNamed(name))
 
 
-class Action (FocusWidget):
+class Action(FocusWidget):
     """
     Aids in executing AT-SPI actions, refocusing the widget if necessary.
     """
@@ -347,7 +350,7 @@ class Action (FocusWidget):
         self.__call__(name=name, roleName='text')
 
 
-class Click (Action):
+class Click(Action):
     """
     A special case of Action, Click will eventually handle raw mouse events.
     """
@@ -375,7 +378,7 @@ class Click (Action):
                 self, name=name, roleName=roleName, description=description, delay=delay)
 
 
-class Select (Action):
+class Select(Action):
     """
     Aids in selecting and deselecting widgets, i.e. page tabs
     """
@@ -422,7 +425,6 @@ def run(application, arguments='', appName=''):
     focus.application(application)
     return pid
 
-import os
 # tell sniff not to use auto-refresh while script using this module is running
 # may have already been locked by dogtail.tree
 if not os.path.exists('/tmp/sniff_refresh.lock'):  # pragma: no cover

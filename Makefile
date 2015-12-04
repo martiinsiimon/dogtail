@@ -1,14 +1,19 @@
 # dogtail *development* Makefile
 
-all:
-	python3 setup.py build
+all: install3 install2
 
-install:
+install3: clean
+	python3 setup.py build
 	python3 setup.py install --root=$(DESTDIR)
+
+install2: clean
+	python2 setup.py build
+	python2 setup.py install --root=$(DESTDIR)
 
 clean:
 	rm -rf api_docs/
 	python3 setup.py clean
+	python2 setup.py clean
 	rm -f MANIFEST
 	rm -rf build dist
 	
@@ -19,9 +24,10 @@ export camelCAPS='[a-z_][a-zA-Z0-9_]*$$'
 export StudlyCaps='[a-zA-Z_][a-zA-Z0-9_]*$$'
 
 check:
-	pylint --indent-string="    " --class-rgx=${StudlyCaps} --function-rgx=${camelCAPS} --method-rgx=${camelCAPS} --variable-rgx=${camelCAPS} --argument-rgx=${camelCaps} dogtail sniff/sniff3 examples/*.py scripts/*.py
+	pylint --indent-string="    " --class-rgx=${StudlyCaps} --function-rgx=${camelCAPS} --method-rgx=${camelCAPS} --variable-rgx=${camelCAPS} --argument-rgx=${camelCaps} dogtail sniff/sniff examples/*.py scripts/*
 
 tarball:
+	python2 setup.py sdist
 	python3 setup.py sdist
 
 rpm: tarball

@@ -1,11 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+import dogtail.tree
+from gtkdemotest import trap_stdout
+import unittest
+
 """
 Unit tests for the dogtail.logging package
 """
-import unittest
-import dogtail.tree
-from gtkdemotest import trap_stdout
 
 
 class TestLogging(unittest.TestCase):

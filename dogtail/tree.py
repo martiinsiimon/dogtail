@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+from dogtail.config import config
+from dogtail import path
+from dogtail import predicate
+from dogtail import rawinput
+from dogtail.logging import debugLogger as logger
+from dogtail.utils import doDelay, Blinker, Lock
+
+from time import sleep
+from types import LambdaType
+import gi
+from gi.repository import GLib
+import os
+
+try:
+    import pyatspi
+    import Accessibility
+except ImportError:  # pragma: no cover
+    raise ImportError("Error importing the AT-SPI bindings")
+
 """Makes some sense of the AT-SPI API
 
 The tree API handles various things for you:
@@ -53,43 +74,25 @@ Unfortunately, some applications do not set up the 'sensitive' state
 correctly on their buttons (e.g. Epiphany on form buttons in a web page). The
 current workaround for this is to set config.ensureSensitivity=False, which
 disables the sensitivity testing.
-
-Authors: Zack Cerza <zcerza@redhat.com>, David Malcolm <dmalcolm@redhat.com>
 """
 __author__ = """Zack Cerza <zcerza@redhat.com>,
 David Malcolm <dmalcolm@redhat.com>
 """
 
-from dogtail.config import config
 if config.checkForA11y:
     from dogtail.utils import checkForA11y
     checkForA11y()
 
-from dogtail import predicate
-from time import sleep
-from dogtail.utils import doDelay, Blinker, Lock
-from dogtail import rawinput
-from dogtail import path
-from types import LambdaType
-from dogtail.logging import debugLogger as logger
-
-try:
-    import pyatspi
-    import Accessibility
-except ImportError:  # pragma: no cover
-    raise ImportError("Error importing the AT-SPI bindings")
-
 # We optionally import the bindings for libWnck.
 try:
+    gi.require_version('Wnck', '3.0')
     from gi.repository import Wnck
     gotWnck = True  # pragma: no cover
-except ImportError:
+except (ImportError, ValueError):
     # Skip this warning, since the functionality is almost entirely nonworking anyway.
     # print "Warning: Dogtail could not import the Python bindings for
     # libwnck. Window-manager manipulation will not be available."
     gotWnck = False
-
-from gi.repository import GLib
 
 haveWarnedAboutChildrenLimit = False
 
@@ -103,6 +106,7 @@ class NotSensitiveError(Exception):
     The widget is not sensitive.
     """
     message = "Cannot %s %s. It is not sensitive."
+
     def __init__(self, action):
         self.action = action
 
@@ -115,6 +119,7 @@ class ActionNotSupported(Exception):
     The widget does not support the requested action.
     """
     message = "Cannot do '%s' action on %s"
+
     def __init__(self, actionName, node):
         self.actionName = actionName
         self.node = node
@@ -196,13 +201,12 @@ class Node(object):
     def debugName(self):
         """debug name assigned during search operations"""
         self.__setupUserData()
-        return self.user_data.get('debugName',None)
+        return self.user_data.get('debugName', None)
 
     @debugName.setter
     def debugName(self, debugName):
         self.__setupUserData()
         self.user_data['debugName'] = debugName
-
 
     #
     # Accessible
@@ -316,8 +320,7 @@ class Node(object):
 
     @combovalue.setter
     def combovalue(self, value):
-        logger.log("Setting combobox %s to '%s'" % (self.getLogString(),
-            value))
+        logger.log("Setting combobox %s to '%s'" % (self.getLogString(), value))
         self.childNamed(childName=value).doActionNamed('click')
         doDelay()
 
@@ -331,7 +334,6 @@ class Node(object):
             return self.user_data['linkAnchor'].URI
         except (KeyError, AttributeError):
             raise NotImplementedError
-
 
     #
     # Text and EditableText
@@ -369,7 +371,6 @@ class Node(object):
         except NotImplementedError:
             raise AttributeError("can't set attribute")
 
-
     @property
     def caretOffset(self):
         """For instances with an AccessibleText interface, the caret
@@ -379,7 +380,6 @@ class Node(object):
     @caretOffset.setter
     def caretOffset(self, offset):
         return self.queryText().setCaretOffset(offset)
-
 
     #
     # Component
@@ -415,8 +415,7 @@ class Node(object):
         node = self
         while True:
             try:
-                child = node.queryComponent().getAccessibleAtPoint(x, y,
-                                                                   pyatspi.DESKTOP_COORDS)
+                child = node.queryComponent().getAccessibleAtPoint(x, y, pyatspi.DESKTOP_COORDS)
                 if child and child.contains(x, y):
                     node = child
                 else:
@@ -933,7 +932,8 @@ class Node(object):
         if no such child is found, and will eventually raise an exception. It
         also logs the search.
         """
-        return self.findChild(predicate.GenericPredicate(name=name, roleName=roleName, description=description, label=label), recursive=recursive, retry=retry, debugName=debugName)
+        return self.findChild(predicate.GenericPredicate(name=name, roleName=roleName, description=description,
+                              label=label), recursive=recursive, retry=retry, debugName=debugName)
 
     def isChild(self, name='', roleName='', description='', label='', recursive=True, retry=False, debugName=None):
         """
@@ -1271,7 +1271,6 @@ if not children:  # pragma: no cover
         "Warning: AT-SPI's desktop is visible but it has no children. Are you running any AT-SPI-aware applications?")
 del children
 
-import os
 # sniff also imports from tree and we don't want to run this code from
 # sniff itself
 if not os.path.exists('/tmp/sniff_running.lock'):
@@ -1286,7 +1285,6 @@ if not os.path.exists('/tmp/sniff_running.lock'):
         # lock should unlock automatically on script exit.
 
 # Convenient place to set some debug variables:
-#config.debugSearching = True
-#config.absoluteNodePaths = True
-#config.logDebugToFile = False
-
+# config.debugSearching = True
+# config.absoluteNodePaths = True
+# config.logDebugToFile = False

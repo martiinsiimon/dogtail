@@ -1,15 +1,17 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
+from __future__ import absolute_import, division, print_function, unicode_literals
+import dogtail.predicate
+import dogtail.tree
+from gtkdemotest import GtkDemoTest
+import unittest
+
 """
 Unit tests for the dogtail.procedural API
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>"
 
-import unittest
-import dogtail.tree
-import dogtail.predicate
 dogtail.config.config.logDebugToFile = False
 dogtail.config.config.logDebugToStdOut = True
-from gtkdemotest import GtkDemoTest
 
 
 class TestScreenshot(GtkDemoTest):

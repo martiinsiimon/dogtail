@@ -1,15 +1,17 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
+from __future__ import absolute_import, division, print_function, unicode_literals
+from dogtail.procedural import focus, keyCombo, deselect, select, click, tree, FocusError, run, config, type
+from gtkdemotest import GtkDemoTest, trap_stdout
+from nose.tools import nottest
+import pyatspi
+
 """
 Unit tests for the dogtail.procedural API
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>"
 
-from dogtail.procedural import focus, keyCombo, deselect, select, click, tree, FocusError, run, config, type
 config.logDebugToFile = False
 config.logDebugToStdOut = True
-import pyatspi
-from gtkdemotest import GtkDemoTest, trap_stdout
-from nose.tools import nottest
 
 
 class GtkDemoTest(GtkDemoTest):
@@ -127,6 +129,7 @@ class TestFocus(GtkDemoTest):
 
     def testFocusMenu(self):
         self.runDemo('Builder')
+        #focus.window('Builder')
         focus.window('GtkBuilder demo')
         focus.menu('File')
         self.assertTrue(isinstance(focus.widget.node, tree.Node))
@@ -134,6 +137,7 @@ class TestFocus(GtkDemoTest):
 
     def testFocusMenuItem(self):
         self.runDemo('Builder')
+        #focus.window('Builder')
         focus.window('GtkBuilder demo')
         click.menu('File')
         focus.menuItem('New')
@@ -142,6 +146,7 @@ class TestFocus(GtkDemoTest):
 
     def testFocusButton(self):
         self.runDemo('Builder')
+        #focus.window('Builder')
         focus.window('GtkBuilder demo')
         focus.button('Open')
         self.assertTrue(isinstance(focus.widget.node, tree.Node))
@@ -149,6 +154,7 @@ class TestFocus(GtkDemoTest):
 
     def testFocusTable(self):
         self.runDemo('Builder')
+        #focus.window('Builder')
         focus.window('GtkBuilder demo')
         focus.table('')
         self.assertTrue(isinstance(focus.widget.node, tree.Node))
@@ -156,6 +162,7 @@ class TestFocus(GtkDemoTest):
 
     def testFocusTableCell(self):
         self.runDemo('Builder')
+        #focus.window('Builder')
         focus.window('GtkBuilder demo')
         focus.tableCell('')
         self.assertTrue(isinstance(focus.widget.node, tree.Node))
@@ -206,8 +213,10 @@ class TestActions(GtkDemoTest):
         self.assertFalse(focus.widget.isSelected)
 
     def testTyping(self):
+        # self.runDemo('Dialogs and Message Boxes')
+        # wnd = self.app.window('Dialogs and Message Boxes')
         self.runDemo('Dialog and Message Boxes')
-        focus.window('Dialogs')
+        wnd = self.app.window('Dialogs')
         focus.widget(roleName='text')
         type("hello world")
         self.assertEqual(focus.widget.node.text, 'hello world')

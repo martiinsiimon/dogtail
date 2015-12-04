@@ -1,5 +1,14 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+import dogtail.config
+import dogtail.predicate
+import dogtail.tree
+from gtkdemotest import GtkDemoTest, trap_stdout
+from nose.tools import nottest
+import pyatspi
+import unittest
+
 """
 Unit tests for the dogtail.Node class
 
@@ -8,21 +17,15 @@ Notes on pyunit (the "unittest" module):
 Test classes are written as subclass of unittest.TestCase.
 A test is a method of such a class, beginning with the string "test"
 
-unittest.main() will run all such methods.  Use "-v" to get feedback on which tests are being run.  Tests are run in alphabetical order; all failure reports are gathered at the end.
+unittest.main() will run all such methods.  Use "-v" to get feedback on which tests are being run.
+Tests are run in alphabetical order; all failure reports are gathered at the end.
 
 setUp and tearDown are "magic" methods, called before and after each such
 test method is run.
 """
 __author__ = "Dave Malcolm <dmalcolm@redhat.com>"
 
-import unittest
-import dogtail.tree
-import dogtail.predicate
-import dogtail.config
 dogtail.config.config.logDebugToFile = False
-import pyatspi
-from nose.tools import nottest
-from gtkdemotest import GtkDemoTest, trap_stdout
 
 
 class TestNodeAttributes(GtkDemoTest):
@@ -118,6 +121,8 @@ class TestNodeAttributes(GtkDemoTest):
         Use gtk-demo's text entry example to check that reading and writing
         Node.text works as expected
         """
+        # self.runDemo('Dialogs and Message Boxes')
+        # wnd = self.app.window('Dialogs and Message Boxes')
         self.runDemo('Dialog and Message Boxes')
         wnd = self.app.window('Dialogs')
         wnd.button('Interactive Dialog').click()
@@ -157,6 +162,8 @@ class TestNodeAttributes(GtkDemoTest):
     @nottest
     def testCaretOffset(self):
         "Make sure the caret offset works as expected"
+        # self.runDemo('Dialogs and Message Boxes')
+        # wnd = self.app.window('Dialogs and Message Boxes')
         self.runDemo('Dialog and Message Boxes')
         wnd = self.app.window('Dialogs')
         entry1 = wnd.child(label='Entry 1')
@@ -230,6 +237,8 @@ class TestNodeAttributes(GtkDemoTest):
     @nottest
     def testGetLabelee(self):
         "Entry1/2's labelee should be a text widget"
+        # self.runDemo('Dialogs and Message Boxes')
+        # wnd = self.app.window('Dialogs and Message Boxes')
         self.runDemo('Dialog and Message Boxes')
         wnd = self.app.window('Dialogs')
         label = wnd.child(roleName='label')
@@ -367,7 +376,7 @@ class TestSelection(GtkDemoTest):
 
         # Check state:
         # self.assert_(info.isSelected)
-        #self.assert_(not source.isSelected)
+        # self.assert_(not source.isSelected)
 
 
 class TestValue(GtkDemoTest):
@@ -437,17 +446,19 @@ class TestSearching(GtkDemoTest):
         self.assertEquals(len(pageTabs), 4)
 
     def testFindChildrenLambdas(self):
+        # self.runDemo('Dialogs and Message Boxes')
+        # wnd = self.app.window('Dialogs and Message Boxes')
         self.runDemo('Dialog and Message Boxes')
         wnd = self.app.window('Dialogs')
-        texts = wnd.findChildren(lambda x: x.roleName=='text', isLambda = True)
+        texts = wnd.findChildren(lambda x: x.roleName == 'text', isLambda=True)
         self.assertEquals(len(texts), 2)
         self.assertEquals(texts[0].roleName, 'text')
         self.assertEquals(texts[1].roleName, 'text')
-        texts1 = wnd.findChildren(lambda x: x.roleName=='text' and x.labeler.name == 'Entry 1', isLambda = True)
+        texts1 = wnd.findChildren(lambda x: x.roleName == 'text' and x.labeler.name == 'Entry 1', isLambda=True)
         self.assertEquals(len(texts1), 1)
         self.assertEquals(texts1[0].roleName, 'text')
         self.assertEquals(texts1[0].labeler.name, 'Entry 1')
-        texts2 = wnd.findChildren(lambda x: x.roleName=='text' and x.showing, isLambda = True)
+        texts2 = wnd.findChildren(lambda x: x.roleName == 'text' and x.showing, isLambda=True)
         self.assertEquals(len(texts2), 2)
         self.assertEquals(texts2[0].roleName, 'text')
         self.assertTrue(texts2[0].showing)
