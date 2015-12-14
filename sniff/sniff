@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: UTF8 -*-
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 """
 http://en.wikipedia.org/wiki/Model-view-controller
 
@@ -50,10 +51,9 @@ class SniffApp(object):
             import os
             path = os.path.abspath(
                 os.path.join(__file__, os.path.pardir, os.path.pardir))
-            if path is '/': # in case the path is /bin/sniff
+            if path == '/':  # in case the path is /bin/sniff
                 path = '/usr'
-            self.builder.add_from_file(path +
-                                       '/share/dogtail/glade/sniff.ui')
+            self.builder.add_from_file(path + '/share/dogtail/glade/sniff.ui')
         self.app = self.builder.get_object(self.appName)
         try:
             self.app.set_icon_from_file('../icons/dogtail-head.svg')
@@ -63,8 +63,7 @@ class SniffApp(object):
                 os.path.join(__file__, os.path.pardir, os.path.pardir))
             if path is '/':
                 path = '/usr'
-            self.app.set_icon_from_file(os.path.join(path,
-                                                     'share/icons/hicolor/scalable/apps/dogtail-head.svg'))
+            self.app.set_icon_from_file(os.path.join(path, 'share/icons/hicolor/scalable/apps/dogtail-head.svg'))
         self.setUpWidgets()
         self.connectSignals()
         self.app.show_all()
@@ -246,7 +245,7 @@ class SniffController(object):
         node = self.getSelectedNode()
         if node:
             self.setUpBottomPane(node)
-            if self.highlight1.get_active() is True:
+            if self.highlight1.get_active():
                 node.blink()
 
     def getSelectedNode(self):
@@ -258,9 +257,9 @@ class SniffController(object):
         return node
 
     def expandAll(self, widget, *args):
-        if args[0] == True:
+        if args[0]:
             self.treeView.expand_all()
-        elif args[0] == False:
+        else:
             self.treeView.collapse_all()
 
     def rowExpanded(self, treeview, iter, path, *userParams):
@@ -307,13 +306,11 @@ class SniffController(object):
 
     def buttonPress(self, widget, event, *userParams):
         try:
-            path, treeViewCol, relX, relY = \
-                self.treeView.get_path_at_pos(int(event.x),
-                                              int(event.y))
+            path, treeViewCol, relX, relY = self.treeView.get_path_at_pos(int(event.x), int(event.y))
         except TypeError:
             return
         node = self.treeModel.getNode(self.treeModel.get_iter(path))
-        if node == None:
+        if node is None:
             return
 
         if event.button == 3:
@@ -322,8 +319,7 @@ class SniffController(object):
             if node.actions:
                 for action in list(node.actions.keys()):
                     menuItem = Gtk.MenuItem(label=action.capitalize())
-                    menuItem.connect(
-                        'activate', self.menuItemActivate, node.doActionNamed, action)
+                    menuItem.connect('activate', self.menuItemActivate, node.doActionNamed, action)
                     menuItem.show()
                     self.menu.append(menuItem)
             if not menuItem:
@@ -343,7 +339,7 @@ class SniffController(object):
 
     def setUpBottomPane(self, node):
         """Generic code for setting up the table under the TreeView"""
-        if node == None:
+        if node is None:
             return
         self.nameTextLabel.set_text(node.name if len(node.name) <= 128 else "%s..." % node.name[:128])
         self.roleNameTextLabel.set_text(node.roleName)
@@ -356,8 +352,7 @@ class SniffController(object):
         # Have we connected this signal yet?
         # If so, disconnect it before proceeding.
         if self.textTextViewBufferCallbackID != self.invalidBufferCallbackID:
-            self.textTextView.get_buffer().disconnect(
-                self.textTextViewBufferCallbackID)
+            self.textTextView.get_buffer().disconnect(self.textTextViewBufferCallbackID)
             self.textTextViewBufferCallbackID = self.invalidBufferCallbackID
 
         if node.text is not None:
@@ -367,8 +362,7 @@ class SniffController(object):
                 node.queryEditableText()
                 # Remember the handler ID of this connection.
                 self.textTextView.set_sensitive(True)
-                self.textTextViewBufferCallbackID = \
-                    buffer.connect('changed', self.changeText, node)
+                self.textTextViewBufferCallbackID = buffer.connect('changed', self.changeText, node)
             except NotImplementedError:
                 self.textTextView.set_sensitive(False)
         else:
@@ -395,10 +389,9 @@ class SniffController(object):
         self.stateModel.setNode(node)
 
     def changeText(self, textBuffer, node):
-        if node == None:
+        if node is None:
             return
-        node.text = textBuffer.get_text(textBuffer.get_start_iter(),
-                                        textBuffer.get_end_iter())
+        node.text = textBuffer.get_text(textBuffer.get_start_iter(), textBuffer.get_end_iter())
 
 
 class SniffModel(Gtk.TreeStore):

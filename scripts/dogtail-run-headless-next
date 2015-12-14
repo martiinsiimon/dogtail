@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 descr = """
 Unlike the original headless script this will make use of an Display Manager
 (DM - currently gdm) to handle starting the X server and user session. It's motivated
@@ -187,15 +189,15 @@ class DisplayManagerSession(object):
                     subprocess.Popen('sudo mv -f %s %s' % (tempfile, self.accountfile), shell=True).wait()
                     time.sleep(1)
                     os.system('sudo service accounts-daemon restart')
-                    time.sleep(6) # prevent a possible race condition
+                    time.sleep(6)  # prevent a possible race condition
                     os.system('sudo service systemd-logind restart')
-                    time.sleep(6) # these are fast, but we still need to make sure no races happen
+                    time.sleep(6)  # these are fast, but we still need to make sure no races happen
                 else:
                     subprocess.Popen('sudo rm -f %s' % tempfile, shell=True).wait()
             elif self.dm == 'kdm':
                 if self.session is not None:
                     subprocess.Popen(
-                    'echo "[Desktop]\nSession=%s" > /home/%s/.dmrc' % (self.session, self.user), shell=True).wait()
+                        'echo "[Desktop]\nSession=%s" > /home/%s/.dmrc' % (self.session, self.user), shell=True).wait()
 
     def start(self, restart=False):
         if restart:
@@ -238,12 +240,15 @@ def parse():
     parser.add_argument('--session', required=False,
                         help="""What session to use. Not specifying results in system default session on first login
                         or test user's last session with follow-up logins.
-                        Otherwise you can set any xsession desktop file name here (i.e. 'gnome-classic', 'gnome', 'lxde' etc.).
+                        Otherwise you can set any xsession desktop file name here (i.e. 'gnome-classic', 'gnome',
+                        'lxde' etc.).
                         'kde' defaults to 'kde-plasma for legacy reasons.'""")
     parser.add_argument('--session-binary', required=False,
-                        help="""Specify an in-session ever-running binary (full path) to get the environment from. Only needed for non-gnome/kde sessions.""")
+                        help="""Specify an in-session ever-running binary (full path) to get the environment from.
+                            Only needed for non-gnome/kde sessions.""")
     parser.add_argument('--dm', required=False,
-                        help="""What display manager to use for spawning session. Supported are 'gdm' (default) and 'kdm'.""")
+                        help="""What display manager to use for spawning session. Supported are 'gdm' (default) and
+                        'kdm'.""")
     parser.add_argument('--restart', action='store_true',
                         help="""Restart previously running display manager session before script execution.""")
     parser.add_argument('--dont-start', action='store_true',
@@ -269,7 +274,8 @@ def main():
             args.session = 'kde-plasma'
     else:
         if args.session_binary is None:
-            print('dogtail-run-headless-next: Need to specify a --session-binary ever-present in the session to get env from.')
+            print('dogtail-run-headless-next: Need to specify a --session-binary ever-present in the session to get'
+                  ' env from.')
             sys.exit(-1)
     if args.dm == 'gdm' or args.dm is None:
         dm_name = 'gdm'
@@ -292,9 +298,7 @@ def main():
     try:
         os.environ = getSessionEnvironment(dm.session_binary)
     except:
-        print(
-            'dogtail-run-headless-next: Could not get the environment from %s process' %
-            (dm.session_binary))
+        print('dogtail-run-headless-next: Could not get the environment from %s process' % (dm.session_binary))
         dm.stop()
         dm.setup(restore=True)
         sys.exit(1)
