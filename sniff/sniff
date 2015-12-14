@@ -89,8 +89,7 @@ class SniffApp(object):
         self.collapse_all1.connect('activate', self.tree.expandAll, False)
         self.about1.connect('activate', self.showAbout, self)
         self.refreshMenuItem.connect('activate', self.tree.refresh)
-        self.autoRefreshMenuItem.connect(
-            'toggled', self.tree.toggleAutoRefresh)
+        self.autoRefreshMenuItem.connect('toggled', self.tree.toggleAutoRefresh)
         self.setRootMenuItem.connect('activate', self.tree.changeRoot, True)
         self.unsetRootMenuItem.connect('activate', self.tree.changeRoot, False)
 
@@ -105,10 +104,13 @@ class SniffApp(object):
         if not self.about:
             self.about = Gtk.AboutDialog()
             self.about.set_name(self.appName)
+            self.about.set_logo(self.app.get_icon())
+            self.about.set_icon(self.app.get_icon())
             self.about.set_authors(self.appAuthors)
             self.about.set_comments('Explore your desktop with Dogtail')
             self.about.set_website('http://dogtail.fedorahosted.org/')
             self.about.connect("response", self.hideAbout)
+            self.about.set_transient_for(self.app)
         self.about.show_all()
 
     def hideAbout(self, window, response):
@@ -155,8 +157,7 @@ class SniffController(object):
     def setUpStateView(self):
         self.stateView.set_model(self.stateModel)
         cellRenderer = Gtk.CellRendererText()
-        col = Gtk.TreeViewColumn('Present States', cellRenderer,
-                                 text=self.stateModel.stateColumn)
+        col = Gtk.TreeViewColumn('Present States', cellRenderer, text=self.stateModel.stateColumn)
         col.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
         self.stateView.insert_column(col, -1)
 
@@ -230,10 +231,8 @@ class SniffController(object):
                 'object:state-changed')
 
     def connectSignals(self):
-        self.labelerButton.connect('clicked', self.showRelationTarget,
-                                   'labeler')
-        self.labeleeButton.connect('clicked', self.showRelationTarget,
-                                   'labelee')
+        self.labelerButton.connect('clicked', self.showRelationTarget, 'labeler')
+        self.labeleeButton.connect('clicked', self.showRelationTarget, 'labelee')
         self.treeView.connect('button-press-event', self.buttonPress)
         self.treeView.connect('key-press-event', self.keyPress)
         self.treeView.connect('row-expanded', self.rowExpanded, self.treeModel)
@@ -404,8 +403,7 @@ class SniffModel(Gtk.TreeStore):
     def __init__(self):
         self.builder = builder
         #self.autorefresh = self.builder.get_object('autorefresh')
-        Gtk.TreeStore.__init__(self, GObject.TYPE_PYOBJECT,
-                               GObject.TYPE_STRING, GdkPixbuf.Pixbuf)
+        Gtk.TreeStore.__init__(self, GObject.TYPE_PYOBJECT, GObject.TYPE_STRING, GdkPixbuf.Pixbuf)
         root = pyatspi.Registry.getDesktop(0)
         self.rootNode = self.initialRootNode = root
         self.appendAndPopulate(None, self.rootNode)
@@ -504,15 +502,13 @@ class SniffModel(Gtk.TreeStore):
         elif node == self.rootNode:
             indexInParent = 0
             needParent = False
-        elif node.role == pyatspi.ROLE_APPLICATION or node.roleName == \
-                'application':
+        elif node.role == pyatspi.ROLE_APPLICATION or node.roleName == 'application':
             path = [0]
             indexInParent = list(root.children).index(node)
             needParent = False
         elif not node.parent:
             return None
-        elif (0 <= indexInParent <= (len(node.parent) - 1)) and \
-                node.parent[indexInParent] != node:
+        elif (0 <= indexInParent <= (len(node.parent) - 1)) and node.parent[indexInParent] != node:
             return None
             siblings = node.parent.children
             sibIndex = siblings.index(node)
@@ -591,8 +587,7 @@ class SniffModel(Gtk.TreeStore):
                         else:
                             # If it has no children now, give it a sec
                             # to come up with some.
-                            GObject.timeout_add(1000,
-                                                self.__addNodeCB, iter, child)
+                            GObject.timeout_add(1000, self.__addNodeCB, iter, child)
             elif event.type.minor == 'remove':
                 self.__removeNodeCB(iter, node, path)
 
@@ -623,28 +618,23 @@ class SniffModel(Gtk.TreeStore):
                 # wnckApp = Application(node).getWnckApplication()
                 # if wnckApp
                 try:
-                    return theme.load_icon(node.name, 24,
-                                           Gtk.IconLookupFlags.USE_BUILTIN)
+                    return theme.load_icon(node.name, 24, Gtk.IconLookupFlags.USE_BUILTIN)
                 except GObject.GError:
                     try:
-                        return theme.load_icon(node.name.lower(), 24,
-                                               Gtk.IconLookupFlags.USE_BUILTIN)
+                        return theme.load_icon(node.name.lower(), 24, Gtk.IconLookupFlags.USE_BUILTIN)
                     except GObject.GError:
                         return None
             elif node.parent:
                 return iconForRole[node.role]
             else:
-                return theme.load_icon("user-desktop", 24,
-                                       Gtk.IconLookupFlags.USE_BUILTIN)
+                return theme.load_icon("user-desktop", 24, Gtk.IconLookupFlags.USE_BUILTIN)
         except Exception:
-            return theme.load_icon("dialog-error", 24,
-                                   Gtk.IconLookupFlags.USE_BUILTIN)
+            return theme.load_icon("dialog-error", 24, Gtk.IconLookupFlags.USE_BUILTIN)
 
 
 class StateModel(Gtk.ListStore):
     stateColumn = 0
-    statesSupported = ['checked', 'focusable', 'focused', 'sensitive',
-                       'showing', 'visible']
+    statesSupported = ['checked', 'focusable', 'focused', 'sensitive', 'showing', 'visible']
 
     def __init__(self):
         Gtk.ListStore.__init__(self, GObject.TYPE_STRING)
@@ -663,7 +653,7 @@ def loadIcon(iconName):
         import os
         path = os.path.abspath(
             os.path.join(__file__, os.path.pardir, os.path.pardir))
-        if path is '/':
+        if path == '/':
                 path = '/usr'
         iconName = os.path.join(path, 'share/dogtail/icons/', iconName)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(iconName)
