@@ -28,12 +28,10 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(os.path.isdir(dogtail.config.config.dataDir), True)
 
     def test_set(self):
-        self.assertRaises(
-            AttributeError, setattr, dogtail.config.config, 'nosuchoption', 42)
+        self.assertRaises(AttributeError, setattr, dogtail.config.config, 'nosuchoption', 42)
 
     def test_get(self):
-        self.assertRaises(
-            AttributeError, getattr, dogtail.config.config, 'nosuchoption')
+        self.assertRaises(AttributeError, getattr, dogtail.config.config, 'nosuchoption')
 
     def helper_create_directory_and_set_option(self, path, property_name):
         import os.path
@@ -63,5 +61,4 @@ class TestConfiguration(unittest.TestCase):
         default_actionDelay = dogtail.config.config.defaults['actionDelay']
         dogtail.config.config.actionDelay = 2.0
         dogtail.config.config.reset()
-        self.assertEqual(
-            dogtail.config.config.actionDelay, default_actionDelay)
+        self.assertEqual(dogtail.config.config.actionDelay, default_actionDelay)

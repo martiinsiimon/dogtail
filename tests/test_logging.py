@@ -62,11 +62,6 @@ class TestLogging(unittest.TestCase):
             logger_text = f.read()
         self.assertTrue("hello world " in logger_text)
 
-    def test_empty_script_name(self):
-        dogtail.config.config.scriptName = None
-        logger = dogtail.logging.Logger("log", file=True, stdOut=True)
-        self.assertTrue(logger.fileName, "log")
-
     def test_force_to_file(self):
         dogtail.config.config.logDebugToFile = False
         logger = dogtail.logging.Logger("log", file=True, stdOut=False)

@@ -22,16 +22,17 @@ class GtkDemoTest(unittest.TestCase):
         import signal
         import time
         os.kill(self.pid, signal.SIGKILL)
+        os.system('killall gtk3-demo-application > /dev/null 2>&1')
         # Sleep just enough to let the app actually die.
         # AT-SPI doesn't like being hammered too fast.
         time.sleep(0.5)
 
-    def runDemo(self, demoName):
+    def runDemo(self, demoName, retry=True):
         """
         Click on the named demo within the gtk3-demo app.
         """
         tree = self.app.child(roleName="tree table")
-        tree.child(demoName).doActionNamed('activate')
+        tree.child(demoName, retry=retry).doActionNamed('activate')
 
 
 def trap_stdout(function, args=None):
