@@ -6,7 +6,6 @@ import pwd
 import errno
 import re
 import subprocess
-import signal
 import tempfile
 import random
 import glob

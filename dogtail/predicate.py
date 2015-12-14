@@ -361,8 +361,7 @@ class IsAMenuNamed(Predicate):
     def __init__(self, menuName):
         self.menuName = TranslatableString(menuName)
         self.debugName = self.describeSearchResult()
-        self.satisfiedByNode = lambda node: node.roleName == 'menu' and \
-            stringMatches(self.menuName, node.name)
+        self.satisfiedByNode = lambda node: node.roleName == 'menu' and stringMatches(self.menuName, node.name)
 
     def describeSearchResult(self):
         return '%s menu' % (self.menuName)
@@ -375,14 +374,15 @@ class IsAMenuNamed(Predicate):
 
 
 class IsAMenuItemNamed(Predicate):
-    """Predicate subclass that looks for a menu item by name"""
+    """
+    Predicate subclass that looks for a menu item by name
+    """
 
     def __init__(self, menuItemName):
         self.menuItemName = TranslatableString(menuItemName)
         self.debugName = self.describeSearchResult()
         self.satisfiedByNode = lambda node: \
-            node.roleName.endswith('menu item') and \
-            stringMatches(self.menuItemName, node.name)
+            node.roleName.endswith('menu item') and stringMatches(self.menuItemName, node.name)
 
     def describeSearchResult(self):
         return '%s menuitem' % (self.menuItemName)
@@ -402,8 +402,7 @@ class IsATextEntryNamed(Predicate):
     def __init__(self, textEntryName):
         self.textEntryName = TranslatableString(textEntryName)
         self.debugName = self.describeSearchResult()
-        self.satisfiedByNode = lambda node: node.roleName == 'text' and \
-            stringMatches(self.textEntryName, node.name)
+        self.satisfiedByNode = lambda node: node.roleName == 'text' and stringMatches(self.textEntryName, node.name)
 
     def describeSearchResult(self):
         return '%s textentry' % (self.textEntryName)
@@ -423,8 +422,7 @@ class IsAButtonNamed(Predicate):
     def __init__(self, buttonName):
         self.buttonName = TranslatableString(buttonName)
         self.debugName = self.describeSearchResult()
-        self.satisfiedByNode = lambda node: node.roleName == 'push button' \
-            and stringMatches(self.buttonName, node.name)
+        self.satisfiedByNode = lambda node: node.roleName == 'push button' and stringMatches(self.buttonName, node.name)
 
     def describeSearchResult(self):
         return '%s button' % (self.buttonName)
@@ -444,8 +442,7 @@ class IsATabNamed(Predicate):
     def __init__(self, tabName):
         self.tabName = TranslatableString(tabName)
         self.debugName = self.describeSearchResult()
-        self.satisfiedByNode = lambda node: node.roleName == 'page tab' and \
-            stringMatches(self.tabName, node.name)
+        self.satisfiedByNode = lambda node: node.roleName == 'page tab' and stringMatches(self.tabName, node.name)
 
     def describeSearchResult(self):
         return '%s tab' % (self.tabName)

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-"""
-Author: David Malcolm <dmalcolm@redhat.com>
-"""
 __author__ = """David Malcolm <dmalcolm@redhat.com>"""
 
 
@@ -32,8 +29,7 @@ class SearchPath(object):
     def __str__(self):
         result = "{"
         for (predicate, isRecursive) in self.lst:
-            result += "/(%s,%s)" % (
-                predicate.describeSearchResult(), isRecursive)
+            result += "/(%s,%s)" % (predicate.describeSearchResult(), isRecursive)
         return result + "}"
 
     # We need equality to work so that dicts of these work:

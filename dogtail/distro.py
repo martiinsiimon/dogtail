@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
-
-"""
-Handles differences between different distributions
-"""
-__author__ = "Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"
-
-
 import os
 import re
 from dogtail.version import Version
 from dogtail.logging import debugLogger as logger
 from subprocess import check_output
+
+"""
+Handles differences between different distributions
+"""
+__author__ = "Dave Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"
 
 
 class DistributionNotSupportedError(Exception):  # pragma: no cover
@@ -79,7 +77,7 @@ class PackageDb(object):
         for localePrefix in self.localePrefixes:
             if locale:
                 localePrefix = localePrefix + '/' + locale
-            os.path.walk(localePrefix, appendIfMoFile, moFiles)
+            os.walk(localePrefix, appendIfMoFile, moFiles)
 
         return list(moFiles.keys())
 
@@ -147,8 +145,7 @@ class _AptPackageDb(PackageDb):
         packages = self.cache.packages
         for package in packages:
             if package.name == packageName:
-                verString = re.match(
-                    '.*Ver:\'(.*)-.*\' Section:', str(package.current_ver)).group(1)
+                verString = re.match('.*Ver:\'(.*)-.*\' Section:', str(package.current_ver)).group(1)
                 return Version.fromString(verString)
         raise PackageNotFoundError(packageName)
 
@@ -206,8 +203,7 @@ class _PortagePackageDb(PackageDb):  # pragma: no cover
         # FIXME: this takes the first package returned in the list, in the
         # case that there are slotted packages, and removes the leading
         # category such as 'sys-apps'
-        gentooPackageName = portage.db["/"][
-            "vartree"].dbapi.match(packageName)[0].split('/')[1]
+        gentooPackageName = portage.db["/"]["vartree"].dbapi.match(packageName)[0].split('/')[1]
         # this removes the distribution specific versioning returning only the
         # upstream version
         upstreamVersion = portage.pkgsplit(gentooPackageName)[1]
@@ -266,8 +262,7 @@ class _ContinuousPackageDb(PackageDb):
 
     def getFiles(self, packageName):
         return check_output(
-            ["ls -1 /usr/share/locale/*/LC_MESSAGES/%s.mo" % packageName],
-            shell=True).strip().split('\n')
+            ["ls -1 /usr/share/locale/*/LC_MESSAGES/%s.mo" % packageName], shell=True).strip().split('\n')
 
     def getDependencies(self, packageName):
         # Simulate a set using a hash (to a dummy value);

@@ -103,7 +103,9 @@ class Logger(object):
             return
 
         scriptName = config.scriptName
-        if not scriptName:
+
+        # most probably non-reachable code
+        if not scriptName:  # pragma: no cover
             scriptName = 'log'
         self.fileName = scriptName
 
@@ -112,13 +114,11 @@ class Logger(object):
             self.findUniqueName()
         else:
             # If path doesn't exist, raise an exception
-            raise IOError(
-                "Log path %s does not exist or is not a directory" % config.logDir)
+            raise IOError("Log path %s does not exist or is not a directory" % config.logDir)
 
     def findUniqueName(self):
         # generate a logfile name and check if it already exists
-        self.fileName = config.logDir + self.stamper.fileStamp(self.fileName) \
-            + '_' + self.logName
+        self.fileName = config.logDir + self.stamper.fileStamp(self.fileName) + '_' + self.logName
         i = 0
         while os.path.exists(self.fileName):
             # Append the pathname
@@ -184,12 +184,10 @@ class ResultsLogger(Logger):
             value = value[0]
             entry = str(key) + ":      " + str(value)
         else:
-            print("Method argument requires a 1 {key: value} dict. "
-                  "Supplied argument not one {key: value}")
+            print("Method argument requires a 1 {key: value} dict. Supplied argument not one {key: value}")
             raise ValueError(entry)
 
-        Logger.log(self, self.stamper.entryStamp() + "      " + entry,
-                   force=True)
+        Logger.log(self, self.stamper.entryStamp() + "      " + entry, force=True)
 
 debugLogger = Logger('debug', config.logDebugToFile)
 

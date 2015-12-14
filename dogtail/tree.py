@@ -213,7 +213,9 @@ class Node(object):
     #
     @property
     def dead(self):
-        """Is the node dead (defunct) ?"""
+        """
+        Is the node dead (defunct)?
+        """
         try:
             if self.roleName == 'invalid':
                 return True
@@ -227,7 +229,9 @@ class Node(object):
 
     @property
     def children(self):
-        """a list of this Accessible's children"""
+        """
+        A list of this Accessible's children
+        """
         if self.parent and self.parent.roleName == 'hyper link':
             print(self.parent.role)
             return []
@@ -315,7 +319,9 @@ class Node(object):
 
     @property
     def combovalue(self):
-        """The value (as a string) currently selected in the combo box."""
+        """
+        The value (as a string) currently selected in the combo box.
+        """
         return self.name
 
     @combovalue.setter
@@ -341,14 +347,16 @@ class Node(object):
 
     @property
     def text(self):
-        """For instances with an AccessibleText interface, the text as a
+        """
+        For instances with an AccessibleText interface, the text as a
         string. This is read-only, unless the instance also has an
         AccessibleEditableText interface. In this case, you can write values
         to the attribute. This will get logged in the debug log, and a delay
         will be added.
 
         If this instance corresponds to a password entry, use the passwordText
-        property instead."""
+        property instead.
+        """
 
         try:
             return self.queryText().getText(0, -1)
@@ -373,8 +381,9 @@ class Node(object):
 
     @property
     def caretOffset(self):
-        """For instances with an AccessibleText interface, the caret
-        offset as an integer."""
+        """
+        For instances with an AccessibleText interface, the caret offset as an integer.
+        """
         return self.queryText().caretOffset
 
     @caretOffset.setter
@@ -387,18 +396,23 @@ class Node(object):
 
     @property
     def position(self):
-        """A tuple containing the position of the Accessible: (x, y)"""
+        """
+        A tuple containing the position of the Accessible: (x, y)
+        """
         return self.queryComponent().getPosition(pyatspi.DESKTOP_COORDS)
 
     @property
     def size(self):
-        """A tuple containing the size of the Accessible: (w, h)"""
+        """
+        A tuple containing the size of the Accessible: (w, h)
+        """
         return self.queryComponent().getSize()
 
     @property
     def extents(self):
-        """A tuple containing the location and size of the Accessible:
-        (x, y, w, h)"""
+        """
+        A tuple containing the location and size of the Accessible: (x, y, w, h)
+        """
         try:
             ex = self.queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
             return (ex.x, ex.y, ex.width, ex.height)
@@ -428,7 +442,9 @@ class Node(object):
             return None
 
     def grabFocus(self):
-        "Attempts to set the keyboard focus to this Accessible."
+        """
+        Attempts to set the keyboard focus to this Accessible.
+        """
         return self.queryComponent().grabFocus()
 
     def click(self, button=1):
@@ -476,9 +492,9 @@ class Node(object):
     #
     @property
     def labeler(self):
-        """'labeller' (read-only list of Node instances):
-        The node(s) that is/are a label for this node. Generated from
-        'relations'.
+        """
+        'labeller' (read-only list of Node instances):
+        The node(s) that is/are a label for this node. Generated from 'relations'.
         """
         relationSet = self.getRelationSet()
         for relation in relationSet:
@@ -493,7 +509,8 @@ class Node(object):
 
     @property
     def labelee(self):
-        """'labellee' (read-only list of Node instances):
+        """
+        'labellee' (read-only list of Node instances):
         The node(s) that this node is a label for. Generated from 'relations'.
         """
         relationSet = self.getRelationSet()
@@ -512,39 +529,50 @@ class Node(object):
     #
     @property
     def sensitive(self):
-        """Is the Accessible sensitive (i.e. not greyed out)?"""
+        """
+        Is the Accessible sensitive (i.e. not greyed out)?
+        """
         return self.getState().contains(pyatspi.STATE_SENSITIVE)
 
     @property
     def showing(self):
-        """Is the Accessible really showing (rendered and visible) on the
-        screen?"""
+        """
+        Is the Accessible really showing (rendered and visible) on the screen?
+        """
         return self.getState().contains(pyatspi.STATE_SHOWING)
 
     @property
     def focusable(self):
-        """Is the Accessible capable of having keyboard focus?"""
+        """
+        Is the Accessible capable of having keyboard focus?
+        """
         return self.getState().contains(pyatspi.STATE_FOCUSABLE)
 
     @property
     def focused(self):
-        """Does the Accessible have keyboard focus?"""
+        """
+        Does the Accessible have keyboard focus?
+        """
         return self.getState().contains(pyatspi.STATE_FOCUSED)
 
     @property
     def checked(self):
-        """Is the Accessible a checked checkbox?"""
+        """
+        Is the Accessible a checked checkbox?
+        """
         return self.getState().contains(pyatspi.STATE_CHECKED)
 
     @property
     def isChecked(self):
-        """Is the Accessible a checked checkbox? Compatibility property, same
-        as Node.checked."""
+        """
+        Is the Accessible a checked checkbox? Compatibility property, same as Node.checked.
+        """
         return self.checked
 
     @property
     def visible(self):
-        """Is the Accessible set to be visible? A widget with set attribute
+        """
+        Is the Accessible set to be visible? A widget with set attribute
         'visible' is supposed to be shown and doesn't need to be actually
         rendered. On the other hand, a widget with unset attribute 'visible'
         """
@@ -555,19 +583,25 @@ class Node(object):
     #
 
     def selectAll(self):
-        """Selects all children."""
+        """
+        Selects all children.
+        """
         result = self.querySelection().selectAll()
         doDelay()
         return result
 
     def deselectAll(self):
-        """Deselects all selected children."""
+        """
+        Deselects all selected children.
+        """
         result = self.querySelection().clearSelection()
         doDelay()
         return result
 
     def select(self):
-        """Selects the Accessible."""
+        """
+        Selects the Accessible.
+        """
         try:
             parent = self.parent
         except AttributeError:
@@ -577,7 +611,9 @@ class Node(object):
         return result
 
     def deselect(self):
-        """Deselects the Accessible."""
+        """
+        Deselects the Accessible.
+        """
         try:
             parent = self.parent
         except AttributeError:
@@ -588,7 +624,9 @@ class Node(object):
 
     @property
     def isSelected(self):
-        """Is the Accessible selected? Compatibility property, same as Node.selected."""
+        """
+        Is the Accessible selected? Compatibility property, same as Node.selected.
+        """
         try:
             parent = self.parent
         except AttributeError:
@@ -597,12 +635,16 @@ class Node(object):
 
     @property
     def selected(self):
-        """Is the Accessible selected?"""
+        """
+        Is the Accessible selected?
+        """
         return self.isSelected
 
     @property
     def selectedChildren(self):
-        """Returns a list of children that are selected."""
+        """
+        Returns a list of children that are selected.
+        """
         # TODO: hideChildren for Hyperlinks?
         selection = self.querySelection()
         selectedChildren = []
@@ -615,7 +657,9 @@ class Node(object):
 
     @property
     def value(self):
-        """The value contained by the AccessibleValue interface."""
+        """
+        The value contained by the AccessibleValue interface.
+        """
         try:
             return self.queryValue().currentValue
         except NotImplementedError:
@@ -623,11 +667,16 @@ class Node(object):
 
     @value.setter
     def value(self, value):
+        """
+        Setter for the value contained by the AccessibleValue interface.
+        """
         self.queryValue().currentValue = value
 
     @property
     def minValue(self):
-        """The minimum value of self.value"""
+        """
+        The minimum value of self.value
+        """
         try:
             return self.queryValue().minimumValue
         except NotImplementedError:
@@ -635,7 +684,9 @@ class Node(object):
 
     @property
     def minValueIncrement(self):
-        """The minimum value increment of self.value"""
+        """
+        The minimum value increment of self.value
+        """
         try:
             return self.queryValue().minimumIncrement
         except NotImplementedError:
@@ -643,7 +694,9 @@ class Node(object):
 
     @property
     def maxValue(self):
-        """The maximum value of self.value"""
+        """
+        The maximum value of self.value
+        """
         try:
             return self.queryValue().maximumValue
         except NotImplementedError:
@@ -651,8 +704,7 @@ class Node(object):
 
     def typeText(self, string):
         """
-        Type the given text into the node, with appropriate delays and
-        logging.
+        Type the given text into the node, with appropriate delays and logging.
         """
         logger.log("Typing text into %s: '%s'" % (self.getLogString(), string))
 
@@ -819,8 +871,7 @@ class Node(object):
         else:
             return pyatspi.utils.findDescendant(self, pred)
 
-    def findChild(self, pred, recursive=True, debugName=None,
-                  retry=True, requireResult=True):
+    def findChild(self, pred, recursive=True, debugName=None, retry=True, requireResult=True):
         """
         Search for a node satisyfing the predicate, returning a Node.
 
@@ -865,8 +916,7 @@ class Node(object):
                     break
                 numAttempts += 1
                 if config.debugSearching or config.debugSleep:
-                    logger.log("sleeping for %f" %
-                               config.searchBackoffDuration)
+                    logger.log("sleeping for %f" % config.searchBackoffDuration)
                 sleep(config.searchBackoffDuration)
         if requireResult:
             raise SearchError(describeSearch(self, pred, recursive, debugName))
@@ -1086,8 +1136,7 @@ class Root (Node):
         """
         Get all applications.
         """
-        return root.findChildren(predicate.GenericPredicate(
-            roleName="application"), recursive=False)
+        return root.findChildren(predicate.GenericPredicate(roleName="application"), recursive=False)
 
     def application(self, appName, retry=True):
         """
@@ -1128,8 +1177,7 @@ class Application (Node):
         The window will be automatically activated (raised and focused
         by the window manager) if wnck bindings are available.
         """
-        result = self.findChild(
-            predicate.IsAWindowNamed(windowName=windowName), recursive)
+        result = self.findChild(predicate.IsAWindowNamed(windowName=windowName), recursive)
         # FIXME: activate the WnckWindow ?
         # if gotWnck:
         #       result.activate()
@@ -1261,8 +1309,7 @@ try:
     root.debugName = 'root'
 except Exception:  # pragma: no cover
     # Warn if AT-SPI's desktop object doesn't show up.
-    logger.log(
-        "Error: AT-SPI's desktop is not visible. Do you have accessibility enabled?")
+    logger.log("Error: AT-SPI's desktop is not visible. Do you have accessibility enabled?")
 
 # Check that there are applications running. Warn if none are.
 children = root.children

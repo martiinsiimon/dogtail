@@ -32,6 +32,5 @@ def makeWrapperClass(wrappedClass, name):  # pragma: no cover
     klass.__name__ = name
     return klass
 
-Application = makeWrapperClass(Accessibility.Application,
-                               "WrappedApplication")
+Application = makeWrapperClass(Accessibility.Application, "WrappedApplication")
 Node = makeWrapperClass(Accessibility.Accessible, "WrappedNode")

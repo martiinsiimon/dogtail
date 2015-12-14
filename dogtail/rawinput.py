@@ -27,8 +27,7 @@ def doTypingDelay():
 
 def checkCoordinates(x, y):
     if x < 0 or y < 0:
-        raise ValueError(
-            "Attempting to generate a mouse event at negative coordinates: (%s,%s)" % (x, y))
+        raise ValueError("Attempting to generate a mouse event at negative coordinates: (%s,%s)" % (x, y))
 
 
 def click(x, y, button=1, check=True):
@@ -71,7 +70,7 @@ def release(x, y, button=1, check=True):
     if check:
         checkCoordinates(x, y)
     logger.log("Mouse button %s release at (%s,%s)" % (button, x, y))
-    registry.generateMouseEvent(x, y, 'name=b%sr' % button)
+    registry.generateMouseEvent(x, y, name='b%sr' % button)
     doDelay()
 
 
@@ -91,7 +90,8 @@ def absoluteMotion(x, y, mouseDelay=None, check=True):
 
 def absoluteMotionWithTrajectory(source_x, source_y, dest_x, dest_y, mouseDelay=None, check=True):
     """
-    Synthetize an absolute motion
+    Synthetize mouse absolute motion with trajectory. The 'trajectory' means that the whole motion
+    is divided into several atomic movements which are synthetized separately.
     """
     if check:
         checkCoordinates(source_x, source_y)
@@ -123,6 +123,10 @@ def absoluteMotionWithTrajectory(source_x, source_y, dest_x, dest_y, mouseDelay=
 
 
 def relativeMotion(x, y, mouseDelay=None):
+    """
+    Synthetize a relative motion from actual position.
+    Note: Does not check if the end coordinates are positive.
+    """
     logger.log("Mouse relative motion of (%s,%s)" % (x, y))
     registry.generateMouseEvent(x, y, name='rel')
     if mouseDelay:
@@ -193,9 +197,6 @@ keyNameAliases = {
 
 
 def uniCharToKeySym(uniChar):
-    # OK, if it's not actually unicode we can fix that, right?
-    if not isinstance(uniChar, str):
-        uniChar = str(uniChar, 'utf-8')
     i = ord(uniChar)
     keySym = Gdk.unicode_to_keyval(i)
     return keySym
@@ -269,7 +270,6 @@ def keyCombo(comboString):
     modifiers = strings[:-1]
     finalKey = strings[-1]
     for modifier in modifiers:
-
         code = keyNameToKeyCode(modifier)
         registry.generateKeyboardEvent(code, None, KEY_PRESS)
     code = keyNameToKeyCode(finalKey)

@@ -6,9 +6,6 @@ Handles versioning of software packages
 """
 __author__ = 'Dave Malcolm <dmalcolm@redhat.com>'
 
-import re
-import unittest
-
 
 class Version(object):
     """

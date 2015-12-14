@@ -31,8 +31,7 @@ class FocusError(Exception):
 
 
 def focusFailed(pred):
-    errors.warn('The requested widget could not be focused: %s' %
-                pred.debugName)
+    errors.warn('The requested widget could not be focused: %s' % pred.debugName)
 
 ENOARGS = "At least one argument is needed"
 
@@ -73,8 +72,7 @@ class FocusApplication(FocusBase):
         """
         try:
             pred = predicate.IsAnApplicationNamed(name)
-            app = self.desktop.findChild(
-                pred, recursive=False, retry=False)
+            app = self.desktop.findChild(pred, recursive=False, retry=False)
         except tree.SearchError:
             if config.fatalErrors:
                 raise FocusError(name)
@@ -108,8 +106,7 @@ class FocusWindow(FocusBase):
         result = None
         pred = predicate.IsAWindowNamed(name)
         try:
-            result = FocusApplication.node.findChild(
-                pred, requireResult=False, recursive=False)
+            result = FocusApplication.node.findChild(pred, requireResult=False, recursive=False)
         except AttributeError:
             pass
         if result:
@@ -137,8 +134,7 @@ class FocusDialog(FocusBase):
         result = None
         pred = predicate.IsADialogNamed(name)
         try:
-            result = FocusApplication.node.findChild(
-                pred, requireResult=False, recursive=False)
+            result = FocusApplication.node.findChild(pred, requireResult=False, recursive=False)
         except AttributeError:
             pass
         if result:
@@ -161,32 +157,28 @@ class FocusWidget(FocusBase):
     def findByPredicate(self, pred):
         result = None
         try:
-            result = FocusWidget.node.findChild(
-                pred, requireResult=False, retry=False)
+            result = FocusWidget.node.findChild(pred, requireResult=False, retry=False)
         except AttributeError:
             pass
         if result:
             FocusWidget.node = result
         else:
             try:
-                result = FocusDialog.node.findChild(
-                    pred, requireResult=False, retry=False)
+                result = FocusDialog.node.findChild(pred, requireResult=False, retry=False)
             except AttributeError:
                 pass
         if result:
             FocusWidget.node = result
         else:
             try:
-                result = FocusWindow.node.findChild(
-                    pred, requireResult=False, retry=False)
+                result = FocusWindow.node.findChild(pred, requireResult=False, retry=False)
             except AttributeError:
                 pass
         if result:
             FocusWidget.node = result
         else:
             try:
-                result = FocusApplication.node.findChild(
-                    pred, requireResult=False, retry=False)
+                result = FocusApplication.node.findChild(pred, requireResult=False, retry=False)
                 if result:
                     FocusWidget.node = result
             except AttributeError:
@@ -213,8 +205,7 @@ class FocusWidget(FocusBase):
             raise TypeError(ENOARGS)
 
         # search for a widget.
-        pred = predicate.GenericPredicate(
-            name=name, roleName=roleName, description=description)
+        pred = predicate.GenericPredicate(name=name, roleName=roleName, description=description)
         return self.findByPredicate(pred)
 
 
@@ -300,8 +291,7 @@ class Action(FocusWidget):
         Then execute the action.
         """
         if name or roleName or description:
-            FocusWidget.__call__(
-                self, name=name, roleName=roleName, description=description)
+            FocusWidget.__call__(self, name=name, roleName=roleName, description=description)
         self.node.doActionNamed(self.action)
 
     def __getattr__(self, attr):
@@ -368,14 +358,12 @@ class Click(Action):
         the arguments to Action.
         """
         if name or roleName or description:
-            FocusWidget.__call__(
-                self, name=name, roleName=roleName, description=description)
+            FocusWidget.__call__(self, name=name, roleName=roleName, description=description)
         if raw and button:
             # We're doing a raw mouse click
             Click.node.click(button)
         else:
-            Action.__call__(
-                self, name=name, roleName=roleName, description=description, delay=delay)
+            Action.__call__(self, name=name, roleName=roleName, description=description, delay=delay)
 
 
 class Select(Action):
@@ -399,8 +387,7 @@ class Select(Action):
         Then execute the action.
         """
         if name or roleName or description:
-            FocusWidget.__call__(
-                self, name=name, roleName=roleName, description=description)
+            FocusWidget.__call__(self, name=name, roleName=roleName, description=description)
         func = getattr(self.node, self.action)
         func()
 

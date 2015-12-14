@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
+from dogtail.logging import debugLogger as logger
+import inspect
 
 """
 General exceptions; not overly module-specific
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>"
-
-from dogtail.logging import debugLogger as logger
-
-import inspect
 
 
 def warn(message, caller=True):

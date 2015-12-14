@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
+from dogtail import config
+import os
+import re
+import gettext
+from dogtail.logging import debugLogger as logger
 
 """
 Internationalization facilities
 """
 __author__ = """David Malcolm <dmalcolm@redhat.com>, Zack Cerza <zcerza@redhat.com>"""
-
-from dogtail import config
-
-import os
-import re
-import gettext
-
-from dogtail.logging import debugLogger as logger
 
 
 """
@@ -238,8 +235,7 @@ def loadTranslationsFromPackageMoFiles(packageName, getDependencies=True):
                     if config.config.debugTranslation:
                         #import traceback
                         # logger.log(traceback.format_exc())
-                        logger.log(
-                            "Warning: Failed to load mo-file for translation: " + moFile)
+                        logger.log("Warning: Failed to load mo-file for translation: " + moFile)
 
     # Hack alert:
     #

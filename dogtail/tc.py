@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
-
-"""Test Case magic
-
-Author: Ed Rousseau <rousseau@redhat.com>"""
-__author__ = "Ed Rousseau <rousseau@redhat.com>"
-
-import os
-import os.path
 from dogtail.config import config
-from dogtail.logging import ResultsLogger, TimeStamp
-# TODO: rewrite to Python3 compatible image library
-#from PIL import Image, ImageChops, ImageStat
+from dogtail.logging import ResultsLogger
+
+"""
+Test Case magic
+
+FIXME: This module has not been tested since while. Use it with caution!
+(and even better - avoid it and use dogtail.tree)
+"""
+__author__ = "Ed Rousseau <rousseau@redhat.com>"
 
 
 class TC(object):  # pragma: no cover
@@ -84,6 +82,8 @@ class TCString(TC):  # pragma: no cover
         TC.__init__(self)
 
 
+# TODO: rewrite to Python3 compatible image library
+#from PIL import Image, ImageChops, ImageStat
 # TODO: rewrite to Python3 compatible image library OR remove
 # Image test case subclass
 #class TCImage(TC):  # pragma: no cover

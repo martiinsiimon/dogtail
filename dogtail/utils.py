@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
-
-"""
-Various utilities
-"""
-
-__author__ = """Ed Rousseau <rousseau@redhat.com>,
-Zack Cerza <zcerza@redhat.com,
-David Malcolm <dmalcolm@redhat.com>
-"""
 import os
 import sys
 import subprocess
@@ -26,6 +17,15 @@ from dogtail.config import config
 from time import sleep
 from dogtail.logging import debugLogger as logger
 from dogtail.logging import TimeStamp
+
+"""
+Various utilities
+"""
+
+__author__ = """Ed Rousseau <rousseau@redhat.com>,
+Zack Cerza <zcerza@redhat.com,
+David Malcolm <dmalcolm@redhat.com>
+"""
 
 
 def screenshot(file='screenshot.png', timeStamp=True):
@@ -67,8 +67,7 @@ def screenshot(file='screenshot.png', timeStamp=True):
                               width=geometry[2],
                               height=geometry[3])
 
-    pixbuf = Gdk.pixbuf_get_from_window(rootWindow, 0, 0,
-                                        geometry[2], geometry[3])
+    pixbuf = Gdk.pixbuf_get_from_window(rootWindow, 0, 0, geometry[2], geometry[3])
     # GdkPixbuf.Pixbuf.save() needs 'jpeg' and not 'jpg'
     if fileExt == 'jpg':
         fileExt = 'jpeg'
@@ -239,7 +238,7 @@ class Lock(object):
     def __getPostfix(self):
         import random
         import string
-        return ''.join(random.choice(string.letters + string.digits) for x in range(5))
+        return ''.join(random.choice(string.ascii_letters + string.digits) for x in range(5))
 
 
 a11yDConfKey = 'org.gnome.desktop.interface'
@@ -380,7 +379,7 @@ class GnomeShell(object):  # pragma: no cover
         except:
             menu_items = self.getApplicationMenuList(item)
         for node in menu_items:
-            if node.name == item or bytes(node, name, 'utf-8') == item.encode('ascii', 'ignore'):
+            if node.name == item or bytes(node, name, 'utf-8') == item.encode('ascii', 'ignore'):  # name??? bug?
                 return node
         raise Exception(
             'Could not find the item, did application focus change?')

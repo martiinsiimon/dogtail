@@ -14,6 +14,5 @@ __version__ = "0.9.1"
 __copyright__ = "Copyright © 2005-2014 Red Hat, Inc."
 __license__ = "GPL"
 
-import gi.repository
 __all__ = ("config", "distro", "dump", "errors", "i18n", "logging", "path", "predicate",
            "procedural", "rawinput", "sessions", "tc", "tree", "utils", "version", "wrapped")
