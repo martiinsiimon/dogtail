@@ -25,7 +25,7 @@ def plain(node, fileName=None):
         _file.write(spacer * depth + str(item) + '\n')
 
     def dumpStdOut(item, depth):
-        print(spacer * depth + str(item))
+        print(str(spacer * depth) + item)
     if fileName:
         dump = dumpFile
         _file = open(fileName, 'w')
