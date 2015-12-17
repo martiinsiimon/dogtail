@@ -140,7 +140,7 @@ class TCNumber(TC):
 
     def __init__(self):
         TC.__init__(self)
-        self.supportedtypes = ("int", "long", "float", "complex", "oct", "hex")
+        self.supportedtypes = ("int", "float", "complex", "oct", "hex")
 
     # Compare 2 numbers by the type provided in the type arg
     def compare(self, label, baseline, undertest, type):
@@ -159,9 +159,6 @@ class TCNumber(TC):
             if self.type == "int":
                 self.baseline = int(self.baseline)
                 self.undertest = int(self.undertest)
-            elif self.type == "long":
-                self.baseline = long(self.baseline)
-                self.undertest = long(self.undertest)
             elif self.type == "float":
                 self.baseline = float(self.baseline)
                 self.undertest = float(self.undertest)

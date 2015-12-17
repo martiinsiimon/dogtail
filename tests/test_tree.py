@@ -593,14 +593,8 @@ class TestSelection(GtkDemoTest):
 
         pane.selectAll()
         self.assertNotIn(False, [x.selected for x in icons])
-        # Crashes here
-        #pane.deselectAll()
-        #self.assertNotIn(True, [x.selected for x in icons])
         pane.select_all()
         self.assertNotIn(False, [x.selected for x in icons])
-        #pane.deselect_child(0)
-        #self.assertTrue(icons[0].selected)
-        #self.assertNotIn(False, [x.selected for x in icons[1:]])
         pane.select_child(0)
         self.assertTrue(icons[0].selected)
         self.assertNotIn(False, [x.selected for x in icons])
@@ -852,32 +846,6 @@ class TestSearching(GtkDemoTest):
             wnd = self.app.child('Dialogs and Message Boxes', roleName='frame', retry=False)
         self.assertIsNotNone(wnd.childLabelled("Entry 1"))
         self.assertIsNotNone(wnd.button("Message Dialog"))
-
-# Crashes: TypeError: object.__init__() takes no parameters
-#class TestWizard(GtkDemoTest):
-#    def test_wizard(self):
-#        self.runDemo("Assistant")
-#        wnd = self.app.window("Sample assistant (1 of 4)")
-#        wizard = dogtail.tree.Wizard(wnd)
-
-# Fails to find
-#class TestLinks(GtkDemoTest):
-#    def test_link_anchor(self):
-#        self.runDemo("Links")
-#        wnd = self.app.window("Links")
-
-#class TestExceptions(GtkDemoTest):
-#
-#    @nottest
-#    def test_exception(self):
-#        # Kill the gtk-demo prematurely:
-#        import os
-#        import signal
-#        os.kill(self.pid, signal.SIGKILL)
-#
-#        from gi.repository import GLib
-#        # Ensure that we get an exception when we try to work further with it:
-#        self.assertRaises(GLib.GError, self.app.dump)
 
 
 class TestDump(GtkDemoTest):

@@ -48,8 +48,7 @@ class Subprocess(object):  # pragma: no cover
         if self.environ is None:
             self.environ = os.environ
         self.popen = subprocess.Popen(
-            self.cmdList, env=self.environ)  # , stdout = subprocess.PIPE,
-                # stderr = subprocess.STDOUT, close_fds = True)
+            self.cmdList, env=self.environ)
         return self.popen.pid
 
     def wait(self):
@@ -168,7 +167,7 @@ class Session(object):  # pragma: no cover
             envItems = envString.split('\x00')
             envDict = {}
             for item in envItems:
-                if not '=' in item:
+                if '=' not in item:
                     continue
                 k, v = item.split('=', 1)
                 envDict[k] = v

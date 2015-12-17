@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
+import Accessibility
 
 """
 Superclasses for application wrappers
@@ -8,8 +9,6 @@ Subclass these classes if you want to create application wrappers, e.g.:
 http://svn.gnome.org/viewvc/dogtail-tests/trunk/appwrappers/dogtail/appwrappers/gedit.py?view=markup
 """
 __author__ = "Zack Cerza <zcerza@redhat.com>"
-
-import Accessibility
 
 
 def makeWrapperClass(wrappedClass, name):  # pragma: no cover
