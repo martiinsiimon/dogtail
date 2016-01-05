@@ -111,7 +111,7 @@ class DisplayManagerSession(object):
         '''Gives true if process can be greped out of full ps dump '''
         s = subprocess.Popen(["ps", "axw"], stdout=subprocess.PIPE)
         for x in s.stdout:
-            if re.search(process, x):
+            if re.search(process, str(x)):
                 return True
         return False
 
