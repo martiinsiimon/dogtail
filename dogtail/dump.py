@@ -25,7 +25,7 @@ def plain(node, fileName=None):
         try:
             _file.write(spacer * depth + str(item) + '\n')
         except UnicodeDecodeError:
-            _file.write(str(spacer * depth) + str(item) + '\n')
+            _file.write(spacer * depth + str(item).decode('utf8') + '\n')
 
     def dumpStdOut(item, depth):
         try:
