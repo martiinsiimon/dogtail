@@ -18,7 +18,7 @@ def scratchFile(label):  # pragma: no cover
      dogtail-headless-<label>.<random junk>"""
     prefix = "dogtail-headless-"
     return tempfile.NamedTemporaryFile(prefix="%s%s." % (prefix, label),
-                                       dir=config.scratchDir)
+                                       dir=config.scratchDir, mode='w')
 
 
 def testBinary(path):  # pragma: no cover
