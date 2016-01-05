@@ -30,9 +30,13 @@ import os
 import glob
 import subprocess
 import time
-import configparser
 import shutil
 import re
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
+
 from dogtail.sessions import Script
 
 preserve_envs = ['PYTHONPATH', 'TEST']
