@@ -22,10 +22,16 @@ def plain(node, fileName=None):
             crawl(child, depth + 1)
 
     def dumpFile(item, depth):
-        _file.write(spacer * depth + str(item) + '\n')
+        try:
+            _file.write(spacer * depth + str(item) + '\n')
+        except UnicodeDecodeError:
+            _file.write(str(spacer * depth) + str(item) + '\n')
 
     def dumpStdOut(item, depth):
-        print(spacer * depth + str(item))
+        try:
+            print(spacer * depth + str(item))
+        except UnicodeDecodeError:
+            print(spacer * depth + str(item).decode('utf8'))
     if fileName:
         dump = dumpFile
         _file = open(fileName, 'w')
