@@ -10,7 +10,6 @@ Data storage is handled by the SniffModel class.
 There is no SniffView class; we just use a GtkTreeView.
 Data display is handled by the SniffController class.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import gi
 gi.require_version('Gtk', '3.0')
