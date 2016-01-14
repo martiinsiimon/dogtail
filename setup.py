@@ -84,7 +84,12 @@ Vitezslav Humpa <vhumpa@redhat.com>""",
         ('share/dogtail/icons', sniff_icons()),
         ('share/applications', ['sniff/sniff.desktop']),
         ('share/icons/hicolor/scalable/apps', icons('svg'))
-    ]
+    ],
+    options = {
+    'build_scripts': {
+        'executable': '/usr/bin/env python',
+    }
+}
 )
 
 # vim: sw=4 ts=4 sts=4 noet ai
