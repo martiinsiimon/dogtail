@@ -9,15 +9,11 @@ Release: 1%{?dist}
 License: GPLv2
 URL: http://dogtail.fedorahosted.org/
 Source0: http://fedorahosted.org/released/dogtail/%{name}-%{version}.tar.gz
-
 BuildArch: noarch
 
 BuildRequires: python2-devel
-%if 0%{?with_python3}
-BuildRequires:	python3-devel
-%endif
+BuildRequires: python-setuptools
 BuildRequires: desktop-file-utils
-
 Requires: pyatspi
 Requires: pygobject3
 Requires: pycairo
@@ -32,11 +28,15 @@ communicate with desktop applications.
 
 %if 0%{?with_python3}
 %package -n python3-dogtail
-Summary: GUI test tool and automation framework
+Summary: GUI test tool and automation framework, python3 install
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
 Requires: python3-pyatspi
 Requires: python3-gobject
 Requires: python3-cairo
 Requires: rpm-python3
+Requires: xorg-x11-xinit
+Requires: hicolor-icon-theme
 
 %description -n python3-dogtail
 GUI test tool and automation framework that uses assistive technologies to 
@@ -63,12 +63,13 @@ popd
 %install
 %{__python2} ./setup.py install -O2 --root=$RPM_BUILD_ROOT --record=%{name}.files
 rm -rf $RPM_BUILD_ROOT/%{_docdir}/dogtail
-rm -f $RPM_BUILD_ROOT/%{python2_sitelib}/%{name}-%{version}-py%{python2_version}.egg-info
+rm -rf $RPM_BUILD_ROOT/%{python2_sitelib}/%{name}-%{version}-py%{python2_version}.egg-info
 
 %if 0%{?with_python3}
 pushd %{py3dir}
 %{__python3} ./setup.py install -O2 --root=$RPM_BUILD_ROOT --record=%{name}.files
-rm -f $RPM_BUILD_ROOT/%{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info
+rm -rf $RPM_BUILD_ROOT/%{_docdir}/dogtail
+rm -rf $RPM_BUILD_ROOT/%{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info
 popd
 %endif # with_python3
 
@@ -88,7 +89,7 @@ fi
 %posttrans
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
-%files
+%files -n dogtail
 %{_bindir}/*
 %{python2_sitelib}/dogtail/
 %{_datadir}/applications/*
@@ -101,7 +102,15 @@ fi
 
 %if 0%{?with_python3}
 %files -n python3-dogtail
+%{_bindir}/*
 %{python3_sitelib}/dogtail/
+%{_datadir}/applications/*
+%{_datadir}/dogtail/
+%{_datadir}/icons/hicolor/*/apps/%{name}*.*
+%doc COPYING
+%doc README
+%doc NEWS
+%doc examples/
 %endif # with_python3
 
 %changelog
